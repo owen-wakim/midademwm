@@ -1,40 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Troupe saint-georges | Management </title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Midade MWM — a community to connect, participate, and grow together.">
+  <title>Midade MWM | Community</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-    <img src="images/sdl.webp" alt="logo" class="logo">
-    <header>
-        <h1>Troupe saint-georges MwM</h1>
-        <p> management system</p>
-    </header>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Midade MWM home">
+      <span class="brand-mark">M</span>
+      <span>MIDADE <strong>MWM</strong></span>
+    </a>
 
-    <div class="boxes">
-        <a href="home.html" class="box">
-            <img src="images/homepage.jpg" alt="home">
-            <h2>Home</h2>
-            </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
 
-        
-       <a href="login.html" class="box">
-            <img src="images/login.jpg" alt="login">
-            <h2>Login</h2>
-        </a>
+    <nav class="nav" id="mainNav" aria-label="Main navigation">
+      <a class="nav-link active" href="#home">Home</a>
+      <a class="nav-link" href="#about">About us</a>
+      <a class="nav-link" href="#meetings">Meetings</a>
+      <a class="nav-link" href="#gallery">Gallery</a>
+      <a class="nav-link nav-cta" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
 
-        <a href="moreaboutus.html" class="box">
-            <img src="images/moreaboutus.jpg" alt="about us">
-            <h2>About Us</h2>
-
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> A community that brings us together</p>
+        <h1>Good people.<br><span>Great things.</span><br>One community.</h1>
+        <p class="hero-description">
+          A place to meet, share ideas, make memories, and turn good intentions into meaningful action.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#meetings">Explore our meetings <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#about">Get to know us <span aria-hidden="true">→</span></a>
         </div>
-        <footer class="site-footer">
-            <p>Toujours Prêt </p>
-        </footer>
-    
-    
-    
+        <div class="hero-note">
+          <div class="avatar-stack" aria-hidden="true"><span>M</span><span>W</span><span>M</span></div>
+          <p><strong>Better together.</strong><br><small>Ideas grow when we share them.</small></p>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-label="Decorative community illustration">
+        <div class="art-orbit orbit-one"></div>
+        <div class="art-orbit orbit-two"></div>
+        <div class="art-card card-yellow"><span class="art-icon">✳</span><span>Make<br>connections</span></div>
+        <div class="art-card card-pink"><span class="art-icon">♡</span><span>Share<br>kindness</span></div>
+        <div class="art-card card-blue"><span class="art-icon">↗</span><span>Grow<br>together</span></div>
+        <div class="art-center"><span class="center-spark">✦</span><strong>MWM</strong><small>COMMUNITY</small></div>
+        <span class="floating-star star-one">✳</span>
+        <span class="floating-star star-two">✦</span>
+        <span class="floating-star star-three">✳</span>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Community values">
+      <div class="ticker-track">
+        <span>CONNECT</span><b>✳</b><span>PARTICIPATE</span><b>✳</b><span>CREATE</span><b>✳</b><span>GROW TOGETHER</span><b>✳</b>
+        <span>CONNECT</span><b>✳</b><span>PARTICIPATE</span><b>✳</b><span>CREATE</span><b>✳</b><span>GROW TOGETHER</span><b>✳</b>
+      </div>
+    </section>
+
+    <section class="section-wrap about-section" id="about">
+      <div class="section-heading">
+        <p class="eyebrow">A little about us</p>
+        <h2>More than a group.<br><span>A place to belong.</span></h2>
+      </div>
+      <div class="about-content">
+        <p>MWM is a community built around people, shared experiences, and the belief that small actions can make a big difference.</p>
+        <p>We bring people together through meetings, activities, and moments worth remembering. There is always room for a new idea and another friendly face.</p>
+        <a class="text-link" href="#contact">Come say hello <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="meetings-section" id="meetings">
+      <div class="section-wrap">
+        <div class="section-topline">
+          <div class="section-heading">
+            <p class="eyebrow">Save the date</p>
+            <h2>What's <span>happening?</span></h2>
+          </div>
+          <span class="section-sticker">See you there! ↘</span>
+        </div>
+        <div class="meeting-grid" id="meetingGrid">
+          <article class="meeting-card meeting-card-featured">
+            <div class="meeting-date"><span>01</span><small>NOV</small></div>
+            <div class="meeting-details">
+              <span class="tag">Community</span>
+              <h3>Our next gathering</h3>
+              <p>Come meet the community, exchange ideas, and find out what's coming next.</p>
+              <div class="meeting-meta"><span>◷ Date to be confirmed</span><span>⌖ Main venue</span></div>
+            </div>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+          </article>
+          <article class="meeting-card">
+            <div class="meeting-date date-blue"><span>+</span><small>SOON</small></div>
+            <div class="meeting-details">
+              <span class="tag tag-blue">Activities</span>
+              <h3>More events soon</h3>
+              <p>New activities and community moments will be announced here.</p>
+              <div class="meeting-meta"><span>◷ Stay tuned</span></div>
+            </div>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+          </article>
+        </div>
+        <p class="helper-note">Demo content — replace these cards with your real meeting details.</p>
+      </div>
+    </section>
+
+    <section class="section-wrap gallery-section" id="gallery">
+      <div class="section-topline">
+        <div class="section-heading">
+          <p class="eyebrow">Little moments, big memories</p>
+          <h2>Life in our <span>community.</span></h2>
+        </div>
+        <p class="gallery-intro">A glimpse of the moments we make together. Your photos can go here.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-tile tile-one"><span class="tile-symbol">✳</span><span class="tile-label">Ideas in action</span></div>
+        <div class="gallery-tile tile-two"><span class="tile-symbol">♡</span><span class="tile-label">People first</span></div>
+        <div class="gallery-tile tile-three"><span class="tile-symbol">✦</span><span class="tile-label">Memories together</span></div>
+      </div>
+      <p class="helper-note">These are colorful placeholders, not real photographs.</p>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="section-wrap contact-inner">
+        <div>
+          <p class="eyebrow eyebrow-light">Your community is calling</p>
+          <h2>Have an idea?<br><span>Let's talk.</span></h2>
+          <p>Have a question, an idea, or want to get involved? Send us a message.</p>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <label for="contactName">Your name</label>
+          <input id="contactName" name="name" type="text" placeholder="How should we call you?" required>
+          <label for="contactEmail">Your email</label>
+          <input id="contactEmail" name="email" type="email" placeholder="you@example.com" required>
+          <label for="contactMessage">Your message</label>
+          <textarea id="contactMessage" name="message" rows="3" placeholder="Tell us what's on your mind..." required></textarea>
+          <button class="button button-light" type="submit">Prepare message <span aria-hidden="true">↗</span></button>
+          <p class="form-note" id="formMessage" role="status">Demo form: it does not send or save messages yet.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="#home"><span class="brand-mark">M</span><span>MIDADE <strong>MWM</strong></span></a>
+    <p>Made for people, powered by community.</p>
+    <a class="back-top" href="#home">Back to top ↑</a>
+    <small class="copyright">© <span id="currentYear"></span> Midade MWM</small>
+  </footer>
 </body>
 </html>

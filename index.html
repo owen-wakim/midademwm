@@ -6,29 +6,29 @@
     <title>Midade Mieh w Mieh - Together We Build More</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
-        <!-- Top Header Navigation -->
+        <!-- Header -->
         <header class="app-header">
-            <div class="logo-area" onclick="navigateTo('home')">
+            <div class="logo-area" id="brand-logo-btn">
                 <span class="crown-icon">👑</span>
                 <h1 class="brand-title">Midade Mieh w Mieh</h1>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" id="auth-nav-btn" title="Account" onclick="navigateTo('auth')"><i class="fa-solid fa-user"></i></button>
+                <button class="icon-btn" id="auth-nav-btn" title="Account"><i class="fa-solid fa-user"></i></button>
                 <button class="icon-btn" id="search-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <button class="icon-btn" id="menu-btn" title="Menu"><i class="fa-solid fa-bars"></i></button>
             </div>
         </header>
 
-        <!-- Main Content Viewport -->
+        <!-- Main View Area -->
         <main id="main-content" class="content-viewport">
-            <!-- Dynamically injected views go here -->
+            <!-- Rendered by script.js -->
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -51,25 +51,25 @@
             </button>
         </nav>
 
-        <!-- Side Drawer Menu Overlay -->
+        <!-- Side Drawer Overlay -->
         <div class="drawer-overlay" id="drawer-overlay">
             <div class="drawer-content">
                 <div class="drawer-header">
-                    <div class="logo-area" onclick="navigateTo('home'); closeDrawer();" style="cursor:pointer;">
+                    <div class="logo-area" id="drawer-brand-btn">
                         <span class="crown-icon">👑</span>
                         <h1 class="brand-title" style="font-size:16px; color:white;">Midade Mieh w Mieh</h1>
                     </div>
-                    <button class="icon-btn close-drawer"><i class="fa-solid fa-xmark"></i></button>
+                    <button class="icon-btn close-drawer" id="close-drawer-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <ul class="drawer-menu-list">
-                    <li onclick="navigateTo('home'); closeDrawer();"><i class="fa-solid fa-house"></i><span>Home</span></li>
-                    <li onclick="navigateTo('meetings'); closeDrawer();"><i class="fa-solid fa-calendar-days"></i><span>Meetings</span></li>
-                    <li onclick="navigateTo('about'); closeDrawer();"><i class="fa-solid fa-user-group"></i><span>About Us</span></li>
-                    <li onclick="navigateTo('pictures'); closeDrawer();"><i class="fa-solid fa-image"></i><span>Pictures</span></li>
-                    <li onclick="navigateTo('events'); closeDrawer();"><i class="fa-solid fa-calendar-plus"></i><span>Events</span></li>
-                    <li onclick="navigateTo('team'); closeDrawer();"><i class="fa-solid fa-users"></i><span>Our Team</span></li>
-                    <li onclick="navigateTo('contact'); closeDrawer();"><i class="fa-solid fa-envelope"></i><span>Contact</span></li>
-                    <li onclick="navigateTo('auth'); closeDrawer();"><i class="fa-solid fa-user-lock"></i><span>Sign In / Sign Up</span></li>
+                    <li data-nav="home"><i class="fa-solid fa-house"></i><span>Home</span></li>
+                    <li data-nav="meetings"><i class="fa-solid fa-calendar-days"></i><span>Meetings</span></li>
+                    <li data-nav="about"><i class="fa-solid fa-user-group"></i><span>About Us</span></li>
+                    <li data-nav="pictures"><i class="fa-solid fa-image"></i><span>Pictures</span></li>
+                    <li data-nav="events"><i class="fa-solid fa-calendar-plus"></i><span>Events</span></li>
+                    <li data-nav="team"><i class="fa-solid fa-users"></i><span>Our Team</span></li>
+                    <li data-nav="contact"><i class="fa-solid fa-envelope"></i><span>Contact</span></li>
+                    <li data-nav="auth"><i class="fa-solid fa-user-lock"></i><span>Sign In / Sign Up</span></li>
                 </ul>
                 <div class="drawer-footer">
                     <div class="footer-tagline">👑 Together We Build More</div>
@@ -79,9 +79,11 @@
         </div>
     </div>
 
-    <!-- Supabase JS Client CDN -->
+    <!-- Load Supabase Client SDK first -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Separate Auth File -->
     <script src="auth.js"></script>
+    <!-- Main Script File -->
     <script src="script.js"></script>
 </body>
 </html>

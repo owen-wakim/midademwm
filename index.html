@@ -20,6 +20,7 @@
                 <h1 class="brand-title">Midade Mieh w Mieh</h1>
             </div>
             <div class="header-actions">
+                <button class="icon-btn" id="auth-nav-btn" title="Account" onclick="navigateTo('auth')"><i class="fa-solid fa-user"></i></button>
                 <button class="icon-btn" id="search-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <button class="icon-btn" id="menu-btn" title="Menu"><i class="fa-solid fa-bars"></i></button>
             </div>
@@ -56,7 +57,7 @@
                 <div class="drawer-header">
                     <div class="logo-area" onclick="navigateTo('home'); closeDrawer();" style="cursor:pointer;">
                         <span class="crown-icon">👑</span>
-                        <h1 class="brand-title" style="font-size:16px;">Midade Mieh w Mieh</h1>
+                        <h1 class="brand-title" style="font-size:16px; color:white;">Midade Mieh w Mieh</h1>
                     </div>
                     <button class="icon-btn close-drawer"><i class="fa-solid fa-xmark"></i></button>
                 </div>
@@ -68,6 +69,7 @@
                     <li onclick="navigateTo('events'); closeDrawer();"><i class="fa-solid fa-calendar-plus"></i><span>Events</span></li>
                     <li onclick="navigateTo('team'); closeDrawer();"><i class="fa-solid fa-users"></i><span>Our Team</span></li>
                     <li onclick="navigateTo('contact'); closeDrawer();"><i class="fa-solid fa-envelope"></i><span>Contact</span></li>
+                    <li onclick="navigateTo('auth'); closeDrawer();"><i class="fa-solid fa-user-lock"></i><span>Sign In / Sign Up</span></li>
                 </ul>
                 <div class="drawer-footer">
                     <div class="footer-tagline">👑 Together We Build More</div>
@@ -79,6 +81,7 @@
 
     <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

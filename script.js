@@ -12,7 +12,7 @@ try {
     console.warn("Supabase initialization warning:", e);
 }
 
-// Fallback Mock Data matching the design preview precisely
+// Fallback Mock Data matching the preview exactly
 const defaultMeetings = [
     {
         id: 1,
@@ -77,7 +77,6 @@ const defaultPhotos = [
     { category: "other", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80" }
 ];
 
-// App State
 let currentView = 'home';
 let meetingsList = [...defaultMeetings];
 let photosList = [...defaultPhotos];
@@ -92,7 +91,6 @@ async function initApp() {
     navigateTo('home');
 }
 
-// Fetch Data from Supabase with fallback to defaults
 async function fetchSupabaseData() {
     if (!supabaseClient) return;
     try {
@@ -106,29 +104,24 @@ async function fetchSupabaseData() {
             photosList = photos;
         }
     } catch (err) {
-        console.log("Using local default data due to network/table state.");
+        console.log("Using local default fallback data.");
     }
 }
 
-// Event Listeners Setup
 function setupEventListeners() {
-    // Bottom Navigation
     document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
+        item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
             navigateTo(target);
         });
     });
 
-    // Drawer Menu toggle
     const menuBtn = document.getElementById('menu-btn');
     const drawerOverlay = document.getElementById('drawer-overlay');
     const closeDrawerBtn = document.querySelector('.close-drawer');
 
     if (menuBtn) {
-        menuBtn.addEventListener('click', () => {
-            drawerOverlay.classList.add('open');
-        });
+        menuBtn.addEventListener('click', () => drawerOverlay.classList.add('open'));
     }
 
     if (closeDrawerBtn) {
@@ -141,11 +134,10 @@ function setupEventListeners() {
         });
     }
 
-    // Search button simulation
     const searchBtn = document.getElementById('search-btn');
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
-            alert("Search feature ready. Browse meetings and pictures below!");
+            navigateTo('meetings');
         });
     }
 }
@@ -155,12 +147,10 @@ function closeDrawer() {
     if (drawerOverlay) drawerOverlay.classList.remove('open');
 }
 
-// Navigation router
 function navigateTo(viewName, param = null) {
     currentView = viewName;
     const mainContent = document.getElementById('main-content');
     
-    // Update active bottom nav state
     document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => {
         if (btn.getAttribute('data-target') === viewName) {
             btn.classList.add('active');
@@ -169,7 +159,6 @@ function navigateTo(viewName, param = null) {
         }
     });
 
-    // Render corresponding view
     switch(viewName) {
         case 'home':
             renderHome(mainContent);
@@ -205,12 +194,11 @@ function navigateTo(viewName, param = null) {
     mainContent.scrollTop = 0;
 }
 
-// --- View Renderers ---
-
+// Render Functions
 function renderHome(container) {
     container.innerHTML = `
         <div class="hero-card">
-            <h2>Welcome to<br>Middle MWM</h2>
+            <h2>Welcome to<br>Midade Mieh w Mieh</h2>
             <p>A community of students, led by students. We organize, plan, and create opportunities for a better tomorrow.</p>
             <button class="btn-primary" onclick="navigateTo('meetings')">
                 View Upcoming Meetings <i class="fa-solid fa-arrow-right"></i>
@@ -279,7 +267,7 @@ function renderMeetings(container, tab = 'upcoming') {
                             <span><i class="fa-solid fa-location-dot"></i> ${m.location}</span>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right"></i>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:13px;"></i>
                 </div>
             `).join('')}
         </div>
@@ -300,16 +288,16 @@ function renderMeetingDetail(container, id) {
         </button>
 
         <div class="meeting-detail-card">
-            <div class="meeting-detail-header">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                 <div>
                     <span style="font-size:12px; font-weight:800; color:var(--primary-blue);">${meeting.month} ${meeting.date}</span>
                     <h2 style="font-size:20px; font-weight:800; margin-top:2px;">${meeting.title}</h2>
                 </div>
             </div>
             
-            <div class="meeting-meta" style="margin-bottom:16px; font-size:13px;">
+            <div class="meeting-meta" style="margin-top:8px; font-size:13px;">
                 <span><i class="fa-regular fa-clock" style="color:var(--primary-blue)"></i> ${meeting.time}</span>
-                <span style="margin-top:4px;"><i class="fa-solid fa-location-dot" style="color:var(--primary-blue)"></i> ${meeting.location}</span>
+                <span style="margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:var(--primary-blue)"></i> ${meeting.location}</span>
             </div>
 
             <img src="${meeting.image}" alt="${meeting.title}" class="meeting-banner">
@@ -351,11 +339,11 @@ function renderMeetingDetail(container, id) {
 function renderAbout(container) {
     container.innerHTML = `
         <h2 class="section-title">About Us</h2>
-        <p class="section-subtitle">Learn more about our mission, vision, and the team behind MWM.</p>
+        <p class="section-subtitle">Learn more about our mission, vision, and team.</p>
 
         <div class="hero-card" style="margin-bottom: 16px;">
             <h2>Together We Build More</h2>
-            <p>Empowering students to lead and innovate.</p>
+            <p>Empowering students to lead and innovate at Midade Mieh w Mieh.</p>
         </div>
 
         <div class="content-card">
@@ -400,7 +388,7 @@ function renderPictures(container, currentCategory = 'all') {
         <div class="photo-grid">
             ${filtered.map(p => `
                 <div class="photo-item">
-                    <img src="${p.url}" alt="MWM Moment">
+                    <img src="${p.url}" alt="Midade Mieh w Mieh Moment">
                 </div>
             `).join('')}
         </div>
@@ -415,7 +403,7 @@ window.filterPhotos = (category) => {
 function renderEvents(container) {
     container.innerHTML = `
         <h2 class="section-title">Events</h2>
-        <p class="section-subtitle">What's coming up next at MWM.</p>
+        <p class="section-subtitle">What's coming up next.</p>
         <div class="content-card">
             <h3><i class="fa-solid fa-calendar-star"></i> Annual Student Summit</h3>
             <p>Join us next month for workshops, guest speakers, and collaborative student projects.</p>
@@ -430,10 +418,10 @@ function renderEvents(container) {
 function renderTeam(container) {
     container.innerHTML = `
         <h2 class="section-title">Our Team</h2>
-        <p class="section-subtitle">Meet the dedicated leaders behind MWM.</p>
+        <p class="section-subtitle">Meet the dedicated leaders behind Midade Mieh w Mieh.</p>
         <div class="content-card">
             <h3><i class="fa-solid fa-user-tie"></i> Executive Board</h3>
-            <p>A dedicated group of students working together for MWM's success, organizing events, and mentoring new members.</p>
+            <p>A dedicated group of students working together for community success, organizing events, and mentoring new members.</p>
         </div>
     `;
 }
@@ -444,7 +432,7 @@ function renderContact(container) {
         <p class="section-subtitle">Get in touch with our team.</p>
         <div class="content-card">
             <h3><i class="fa-solid fa-envelope-circle-check"></i> Send a Message</h3>
-            <p style="margin-bottom: 12px;">Have questions or want to collaborate? Reach out to us at <strong>contact@mwm-students.org</strong> or visit us at the Main Student Union Hall.</p>
+            <p style="margin-bottom: 12px;">Have questions or want to collaborate? Reach out to us at <strong>contact@midademiehwmieh.org</strong>.</p>
             <button class="btn-primary" onclick="alert('Message form submitted successfully!')">Open Contact Form</button>
         </div>
     `;

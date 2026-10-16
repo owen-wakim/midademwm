@@ -1,4 +1,4 @@
-let defaultMeetings = [
+const defaultMeetings = [
     {
         id: 1,
         title: "General Meeting",
@@ -40,68 +40,64 @@ let defaultMeetings = [
     }
 ];
 
-let defaultPhotos = [
+const defaultPhotos = [
     { category: "meetings", url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" },
     { category: "events", url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80" },
     { category: "meetings", url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=80" },
-    { category: "community", url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=500&q=80" },
-    { category: "events", url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=500&q=80" },
-    { category: "other", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80" }
+    { category: "community", url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=500&q=80" }
 ];
 
 let meetingsList = [...defaultMeetings];
 let photosList = [...defaultPhotos];
 
 document.addEventListener('DOMContentLoaded', () => {
-    initApp();
+    setupGlobalEvents();
+    navigateTo('home');
 });
 
-async function initApp() {
-    setupEventListeners();
-    await fetchSupabaseData();
-    navigateTo('home');
-}
-
-async function fetchSupabaseData() {
-    if (!supabaseClient) return;
-    try {
-        const { data: meetings } = await supabaseClient.from('meetings').select('*');
-        if (meetings && meetings.length > 0) meetingsList = meetings;
-
-        const { data: photos } = await supabaseClient.from('photos').select('*');
-        if (photos && photos.length > 0) photosList = photos;
-    } catch (err) {
-        console.log("Using local default fallback data.");
-    }
-}
-
-function setupEventListeners() {
-    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            navigateTo(item.getAttribute('data-target'));
+function setupGlobalEvents() {
+    // Bottom Nav Click Events
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            navigateTo(target);
         });
     });
 
+    // Drawer Menu Navigation Click Events
+    document.querySelectorAll('.drawer-menu-list li').forEach(item => {
+        item.addEventListener('click', () => {
+            const target = item.getAttribute('data-nav');
+            navigateTo(target);
+            closeDrawer();
+        });
+    });
+
+    // Header Actions
+    document.getElementById('brand-logo-btn')?.addEventListener('click', () => navigateTo('home'));
+    document.getElementById('drawer-brand-btn')?.addEventListener('click', () => { navigateTo('home'); closeDrawer(); });
+    document.getElementById('auth-nav-btn')?.addEventListener('click', () => navigateTo('auth'));
+    document.getElementById('search-btn')?.addEventListener('click', () => navigateTo('meetings'));
+    
+    // Drawer Overlay
     const menuBtn = document.getElementById('menu-btn');
-    const drawerOverlay = document.getElementById('drawer-overlay');
-    const closeDrawerBtn = document.querySelector('.close-drawer');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const overlay = document.getElementById('drawer-overlay');
 
-    if (menuBtn) menuBtn.addEventListener('click', () => drawerOverlay.classList.add('open'));
-    if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
-    if (drawerOverlay) drawerOverlay.addEventListener('click', (e) => { if (e.target === drawerOverlay) closeDrawer(); });
-
-    const searchBtn = document.getElementById('search-btn');
-    if (searchBtn) searchBtn.addEventListener('click', () => navigateTo('meetings'));
+    if (menuBtn) menuBtn.addEventListener('click', () => overlay.classList.add('open'));
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDrawer(); });
 }
 
 function closeDrawer() {
-    const drawerOverlay = document.getElementById('drawer-overlay');
-    if (drawerOverlay) drawerOverlay.classList.remove('open');
+    document.getElementById('drawer-overlay')?.classList.remove('open');
 }
 
-function navigateTo(viewName, param = null) {
+window.navigateTo = function(viewName, param = null) {
     const mainContent = document.getElementById('main-content');
-    
+    if (!mainContent) return;
+
+    // Update bottom nav bar state
     document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => {
         if (btn.getAttribute('data-target') === viewName) {
             btn.classList.add('active');
@@ -110,7 +106,7 @@ function navigateTo(viewName, param = null) {
         }
     });
 
-    switch(viewName) {
+    switch (viewName) {
         case 'home': renderHome(mainContent); break;
         case 'meetings': renderMeetings(mainContent, 'upcoming'); break;
         case 'meeting-detail': renderMeetingDetail(mainContent, param); break;
@@ -124,13 +120,12 @@ function navigateTo(viewName, param = null) {
         default: renderHome(mainContent);
     }
     mainContent.scrollTop = 0;
-}
+};
 
-// Render Views
 function renderHome(container) {
     container.innerHTML = `
         <div class="hero-card">
-            <h2>Welcome to Midade Mieh w Mieh</h2>
+            <h2>Welcome to<br>Midade Mieh w Mieh</h2>
             <p>A community of students, led by students. We organize, plan, and create opportunities for a better tomorrow.</p>
             <button class="btn-primary" onclick="navigateTo('meetings')">
                 View Upcoming Meetings <i class="fa-solid fa-arrow-right"></i>
@@ -176,7 +171,7 @@ function renderAuth(container) {
     container.innerHTML = `
         <div class="auth-container">
             <h2 class="section-title" style="text-align:center;">Account Access</h2>
-            <p class="section-subtitle" style="text-align:center;">Sign in or create an account via Supabase</p>
+            <p class="section-subtitle" style="text-align:center;">Sign in or create an account</p>
             
             <button class="btn-google" onclick="handleGoogleAuth()">
                 <i class="fa-brands fa-google" style="color:#EA4335;"></i> Continue with Google
@@ -184,7 +179,7 @@ function renderAuth(container) {
 
             <div class="divider"><span>or with email</span></div>
 
-            <form>
+            <form onsubmit="event.preventDefault();">
                 <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
@@ -194,7 +189,7 @@ function renderAuth(container) {
                     <input type="password" id="auth-password" class="form-control" placeholder="••••••••" required>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:16px;">
-                    <button type="submit" class="btn-primary" style="flex:1; justify-content:center;" onclick="handleEmailSignIn(event)">Sign In</button>
+                    <button type="button" class="btn-primary" style="flex:1; justify-content:center;" onclick="handleEmailSignIn(event)">Sign In</button>
                     <button type="button" class="btn-primary" style="flex:1; justify-content:center; background:#0A60FF; color:white;" onclick="handleEmailSignUp(event)">Sign Up</button>
                 </div>
             </form>
@@ -209,8 +204,8 @@ function renderMeetings(container, tab = 'upcoming') {
         <p class="section-subtitle">Stay updated with our upcoming and past meetings.</p>
         
         <div class="tabs-header">
-            <button class="tab-btn ${tab === 'upcoming' ? 'active' : ''}" onclick="renderMeetingsContainer('upcoming')">Upcoming</button>
-            <button class="tab-btn ${tab === 'past' ? 'active' : ''}" onclick="renderMeetingsContainer('past')">Past Meetings</button>
+            <button class="tab-btn ${tab === 'upcoming' ? 'active' : ''}" onclick="window.renderMeetingsContainer('upcoming')">Upcoming</button>
+            <button class="tab-btn ${tab === 'past' ? 'active' : ''}" onclick="window.renderMeetingsContainer('past')">Past Meetings</button>
         </div>
 
         <div class="meetings-list">
@@ -235,12 +230,15 @@ function renderMeetings(container, tab = 'upcoming') {
     `;
 }
 
-window.renderMeetingsContainer = (tab) => renderMeetings(document.getElementById('main-content'), tab);
+window.renderMeetingsContainer = function(tab) {
+    const container = document.getElementById('main-content');
+    if (container) renderMeetings(container, tab);
+};
 
 function renderMeetingDetail(container, id) {
     const meeting = meetingsList.find(m => m.id === id) || meetingsList[0];
     container.innerHTML = `
-        <button class="back-bar" style="background:none; border:none; color:var(--primary-blue); font-weight:700; cursor:pointer; margin-bottom:16px;" onclick="navigateTo('meetings')">
+        <button class="btn-primary" style="background:none; color:var(--primary-blue); box-shadow:none; padding:0; margin-bottom:16px;" onclick="navigateTo('meetings')">
             <i class="fa-solid fa-arrow-left"></i> Back to Meetings
         </button>
 
@@ -249,7 +247,7 @@ function renderMeetingDetail(container, id) {
             <h2 style="font-size:24px; font-weight:800; margin:4px 0 12px 0;">${meeting.title}</h2>
             <img src="${meeting.image}" alt="${meeting.title}" style="width:100%; height:260px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:16px;">
             <p style="margin-bottom:16px;">${meeting.description}</p>
-            <button class="btn-primary" onclick="alert('Added to your calendar!')"><i class="fa-regular fa-calendar-plus"></i> Add to Calendar</button>
+            <button class="btn-primary" onclick="alert('Added to calendar!')"><i class="fa-regular fa-calendar-plus"></i> Add to Calendar</button>
         </div>
     `;
 }
@@ -275,10 +273,10 @@ function renderPictures(container, currentCategory = 'all') {
         <h2 class="section-title">Pictures</h2>
         <p class="section-subtitle">Moments, memories, and milestones.</p>
         <div class="filter-chips">
-            <div class="chip ${currentCategory === 'all' ? 'active' : ''}" onclick="filterPhotos('all')">All</div>
-            <div class="chip ${currentCategory === 'meetings' ? 'active' : ''}" onclick="filterPhotos('meetings')">Meetings</div>
-            <div class="chip ${currentCategory === 'events' ? 'active' : ''}" onclick="filterPhotos('events')">Events</div>
-            <div class="chip ${currentCategory === 'community' ? 'active' : ''}" onclick="filterPhotos('community')">Community</div>
+            <div class="chip ${currentCategory === 'all' ? 'active' : ''}" onclick="window.filterPhotos('all')">All</div>
+            <div class="chip ${currentCategory === 'meetings' ? 'active' : ''}" onclick="window.filterPhotos('meetings')">Meetings</div>
+            <div class="chip ${currentCategory === 'events' ? 'active' : ''}" onclick="window.filterPhotos('events')">Events</div>
+            <div class="chip ${currentCategory === 'community' ? 'active' : ''}" onclick="window.filterPhotos('community')">Community</div>
         </div>
         <div class="photo-grid">
             ${filtered.map(p => `<div class="photo-item"><img src="${p.url}" alt="Moment"></div>`).join('')}
@@ -286,7 +284,10 @@ function renderPictures(container, currentCategory = 'all') {
     `;
 }
 
-window.filterPhotos = (cat) => renderPictures(document.getElementById('main-content'), cat);
+window.filterPhotos = function(cat) {
+    const container = document.getElementById('main-content');
+    if (container) renderPictures(container, cat);
+};
 
 function renderEvents(container) {
     container.innerHTML = `
@@ -327,7 +328,7 @@ function renderMore(container) {
         <p class="section-subtitle">Explore all sections.</p>
         <div class="content-card" style="cursor:pointer;" onclick="navigateTo('auth')">
             <h3><i class="fa-solid fa-user-lock"></i> Sign In / Sign Up</h3>
-            <p>Manage your Supabase account credentials.</p>
+            <p>Manage your account credentials.</p>
         </div>
     `;
 }

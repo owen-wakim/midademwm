@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MWM - Together We Build More</title>
+    <title>Midade Mieh w Mieh - Together We Build More</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
@@ -17,7 +17,7 @@
         <header class="app-header">
             <div class="logo-area" onclick="navigateTo('home')">
                 <span class="crown-icon">👑</span>
-                <h1 class="brand-title">MWM</h1>
+                <h1 class="brand-title">Midade Mieh w Mieh</h1>
             </div>
             <div class="header-actions">
                 <button class="icon-btn" id="search-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -54,24 +54,24 @@
         <div class="drawer-overlay" id="drawer-overlay">
             <div class="drawer-content">
                 <div class="drawer-header">
-                    <div class="logo-area">
+                    <div class="logo-area" onclick="navigateTo('home'); closeDrawer();" style="cursor:pointer;">
                         <span class="crown-icon">👑</span>
-                        <h1 class="brand-title">MWM</h1>
+                        <h1 class="brand-title" style="font-size:16px;">Midade Mieh w Mieh</h1>
                     </div>
                     <button class="icon-btn close-drawer"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <ul class="drawer-menu-list">
-                    <li onclick="navigateTo('home'); closeDrawer();"><i class="fa-solid fa-house"><span>Home</span></i></li>
-                    <li onclick="navigateTo('meetings'); closeDrawer();"><i class="fa-solid fa-calendar-days"><span>Meetings</span></i></li>
-                    <li onclick="navigateTo('about'); closeDrawer();"><i class="fa-solid fa-user-group"><span>About Us</span></i></li>
-                    <li onclick="navigateTo('pictures'); closeDrawer();"><i class="fa-solid fa-image"><span>Pictures</span></i></li>
-                    <li onclick="navigateTo('events'); closeDrawer();"><i class="fa-solid fa-calendar-plus"><span>Events</span></i></li>
-                    <li onclick="navigateTo('team'); closeDrawer();"><i class="fa-solid fa-users"><span>Our Team</span></i></li>
-                    <li onclick="navigateTo('contact'); closeDrawer();"><i class="fa-solid fa-envelope"><span>Contact</span></i></li>
+                    <li onclick="navigateTo('home'); closeDrawer();"><i class="fa-solid fa-house"></i><span>Home</span></li>
+                    <li onclick="navigateTo('meetings'); closeDrawer();"><i class="fa-solid fa-calendar-days"></i><span>Meetings</span></li>
+                    <li onclick="navigateTo('about'); closeDrawer();"><i class="fa-solid fa-user-group"></i><span>About Us</span></li>
+                    <li onclick="navigateTo('pictures'); closeDrawer();"><i class="fa-solid fa-image"></i><span>Pictures</span></li>
+                    <li onclick="navigateTo('events'); closeDrawer();"><i class="fa-solid fa-calendar-plus"></i><span>Events</span></li>
+                    <li onclick="navigateTo('team'); closeDrawer();"><i class="fa-solid fa-users"></i><span>Our Team</span></li>
+                    <li onclick="navigateTo('contact'); closeDrawer();"><i class="fa-solid fa-envelope"></i><span>Contact</span></li>
                 </ul>
                 <div class="drawer-footer">
                     <div class="footer-tagline">👑 Together We Build More</div>
-                    <div class="footer-copy">Middle MWM © 2025</div>
+                    <div class="footer-copy">Midade Mieh w Mieh © 2025</div>
                 </div>
             </div>
         </div>

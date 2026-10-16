@@ -1,19 +1,4 @@
-// Supabase Configuration
-const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_QslFTZ66tJdC5eQj1-t-Sw_mbHrBHNi";
-
-// Initialize Supabase Client safely
-let supabaseClient = null;
-try {
-    if (window.supabase && window.supabase.createClient) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    }
-} catch (e) {
-    console.warn("Supabase initialization warning:", e);
-}
-
-// Fallback Mock Data matching the preview exactly
-const defaultMeetings = [
+let defaultMeetings = [
     {
         id: 1,
         title: "General Meeting",
@@ -52,23 +37,10 @@ const defaultMeetings = [
         category: "upcoming",
         description: "Sync-up across all committees and lead members to review milestones.",
         image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        id: 4,
-        title: "Past Leadership Retrospective",
-        date: "05",
-        month: "OCT",
-        time: "2:00 PM – 3:30 PM",
-        location: "Conference Room",
-        type: "Review",
-        duration: "1.5 hours",
-        category: "past",
-        description: "Review of last month's achievements and community feedback analysis.",
-        image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80"
     }
 ];
 
-const defaultPhotos = [
+let defaultPhotos = [
     { category: "meetings", url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" },
     { category: "events", url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80" },
     { category: "meetings", url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=80" },
@@ -77,7 +49,6 @@ const defaultPhotos = [
     { category: "other", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80" }
 ];
 
-let currentView = 'home';
 let meetingsList = [...defaultMeetings];
 let photosList = [...defaultPhotos];
 
@@ -94,15 +65,11 @@ async function initApp() {
 async function fetchSupabaseData() {
     if (!supabaseClient) return;
     try {
-        const { data: meetings, error: mError } = await supabaseClient.from('meetings').select('*');
-        if (!mError && meetings && meetings.length > 0) {
-            meetingsList = meetings;
-        }
+        const { data: meetings } = await supabaseClient.from('meetings').select('*');
+        if (meetings && meetings.length > 0) meetingsList = meetings;
 
-        const { data: photos, error: pError } = await supabaseClient.from('photos').select('*');
-        if (!pError && photos && photos.length > 0) {
-            photosList = photos;
-        }
+        const { data: photos } = await supabaseClient.from('photos').select('*');
+        if (photos && photos.length > 0) photosList = photos;
     } catch (err) {
         console.log("Using local default fallback data.");
     }
@@ -111,8 +78,7 @@ async function fetchSupabaseData() {
 function setupEventListeners() {
     document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
         item.addEventListener('click', () => {
-            const target = item.getAttribute('data-target');
-            navigateTo(target);
+            navigateTo(item.getAttribute('data-target'));
         });
     });
 
@@ -120,26 +86,12 @@ function setupEventListeners() {
     const drawerOverlay = document.getElementById('drawer-overlay');
     const closeDrawerBtn = document.querySelector('.close-drawer');
 
-    if (menuBtn) {
-        menuBtn.addEventListener('click', () => drawerOverlay.classList.add('open'));
-    }
-
-    if (closeDrawerBtn) {
-        closeDrawerBtn.addEventListener('click', closeDrawer);
-    }
-
-    if (drawerOverlay) {
-        drawerOverlay.addEventListener('click', (e) => {
-            if (e.target === drawerOverlay) closeDrawer();
-        });
-    }
+    if (menuBtn) menuBtn.addEventListener('click', () => drawerOverlay.classList.add('open'));
+    if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+    if (drawerOverlay) drawerOverlay.addEventListener('click', (e) => { if (e.target === drawerOverlay) closeDrawer(); });
 
     const searchBtn = document.getElementById('search-btn');
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            navigateTo('meetings');
-        });
-    }
+    if (searchBtn) searchBtn.addEventListener('click', () => navigateTo('meetings'));
 }
 
 function closeDrawer() {
@@ -148,7 +100,6 @@ function closeDrawer() {
 }
 
 function navigateTo(viewName, param = null) {
-    currentView = viewName;
     const mainContent = document.getElementById('main-content');
     
     document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => {
@@ -160,45 +111,26 @@ function navigateTo(viewName, param = null) {
     });
 
     switch(viewName) {
-        case 'home':
-            renderHome(mainContent);
-            break;
-        case 'meetings':
-            renderMeetings(mainContent, 'upcoming');
-            break;
-        case 'meeting-detail':
-            renderMeetingDetail(mainContent, param);
-            break;
-        case 'about':
-            renderAbout(mainContent);
-            break;
-        case 'pictures':
-            renderPictures(mainContent, 'all');
-            break;
-        case 'events':
-            renderEvents(mainContent);
-            break;
-        case 'team':
-            renderTeam(mainContent);
-            break;
-        case 'contact':
-            renderContact(mainContent);
-            break;
-        case 'more':
-            renderMore(mainContent);
-            break;
-        default:
-            renderHome(mainContent);
+        case 'home': renderHome(mainContent); break;
+        case 'meetings': renderMeetings(mainContent, 'upcoming'); break;
+        case 'meeting-detail': renderMeetingDetail(mainContent, param); break;
+        case 'about': renderAbout(mainContent); break;
+        case 'pictures': renderPictures(mainContent, 'all'); break;
+        case 'events': renderEvents(mainContent); break;
+        case 'team': renderTeam(mainContent); break;
+        case 'contact': renderContact(mainContent); break;
+        case 'auth': renderAuth(mainContent); break;
+        case 'more': renderMore(mainContent); break;
+        default: renderHome(mainContent);
     }
-    
     mainContent.scrollTop = 0;
 }
 
-// Render Functions
+// Render Views
 function renderHome(container) {
     container.innerHTML = `
         <div class="hero-card">
-            <h2>Welcome to<br>Midade Mieh w Mieh</h2>
+            <h2>Welcome to Midade Mieh w Mieh</h2>
             <p>A community of students, led by students. We organize, plan, and create opportunities for a better tomorrow.</p>
             <button class="btn-primary" onclick="navigateTo('meetings')">
                 View Upcoming Meetings <i class="fa-solid fa-arrow-right"></i>
@@ -240,9 +172,38 @@ function renderHome(container) {
     `;
 }
 
+function renderAuth(container) {
+    container.innerHTML = `
+        <div class="auth-container">
+            <h2 class="section-title" style="text-align:center;">Account Access</h2>
+            <p class="section-subtitle" style="text-align:center;">Sign in or create an account via Supabase</p>
+            
+            <button class="btn-google" onclick="handleGoogleAuth()">
+                <i class="fa-brands fa-google" style="color:#EA4335;"></i> Continue with Google
+            </button>
+
+            <div class="divider"><span>or with email</span></div>
+
+            <form>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="auth-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:16px;">
+                    <button type="submit" class="btn-primary" style="flex:1; justify-content:center;" onclick="handleEmailSignIn(event)">Sign In</button>
+                    <button type="button" class="btn-primary" style="flex:1; justify-content:center; background:#0A60FF; color:white;" onclick="handleEmailSignUp(event)">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    `;
+}
+
 function renderMeetings(container, tab = 'upcoming') {
     const filtered = meetingsList.filter(m => m.category === tab);
-    
     container.innerHTML = `
         <h2 class="section-title">Meetings</h2>
         <p class="section-subtitle">Stay updated with our upcoming and past meetings.</p>
@@ -267,71 +228,28 @@ function renderMeetings(container, tab = 'upcoming') {
                             <span><i class="fa-solid fa-location-dot"></i> ${m.location}</span>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:13px;"></i>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:14px;"></i>
                 </div>
             `).join('')}
         </div>
     `;
 }
 
-window.renderMeetingsContainer = (tab) => {
-    const container = document.getElementById('main-content');
-    renderMeetings(container, tab);
-};
+window.renderMeetingsContainer = (tab) => renderMeetings(document.getElementById('main-content'), tab);
 
 function renderMeetingDetail(container, id) {
     const meeting = meetingsList.find(m => m.id === id) || meetingsList[0];
-
     container.innerHTML = `
-        <button class="back-bar" onclick="navigateTo('meetings')">
+        <button class="back-bar" style="background:none; border:none; color:var(--primary-blue); font-weight:700; cursor:pointer; margin-bottom:16px;" onclick="navigateTo('meetings')">
             <i class="fa-solid fa-arrow-left"></i> Back to Meetings
         </button>
 
-        <div class="meeting-detail-card">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                <div>
-                    <span style="font-size:12px; font-weight:800; color:var(--primary-blue);">${meeting.month} ${meeting.date}</span>
-                    <h2 style="font-size:20px; font-weight:800; margin-top:2px;">${meeting.title}</h2>
-                </div>
-            </div>
-            
-            <div class="meeting-meta" style="margin-top:8px; font-size:13px;">
-                <span><i class="fa-regular fa-clock" style="color:var(--primary-blue)"></i> ${meeting.time}</span>
-                <span style="margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:var(--primary-blue)"></i> ${meeting.location}</span>
-            </div>
-
-            <img src="${meeting.image}" alt="${meeting.title}" class="meeting-banner">
-
-            <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">About This Meeting</h3>
-            <p class="meeting-description">${meeting.description}</p>
-
-            <button class="btn-primary" style="width:100%; justify-content:center; margin-bottom:20px;" onclick="alert('Meeting successfully added to your calendar!')">
-                <i class="fa-regular fa-calendar-plus"></i> Add to Calendar
-            </button>
-
-            <div class="detail-info-list">
-                <div class="detail-info-item">
-                    <i class="fa-solid fa-tag"></i>
-                    <div>
-                        <div style="font-size:10px; color:var(--text-muted); font-weight:700;">Type</div>
-                        <div>${meeting.type}</div>
-                    </div>
-                </div>
-                <div class="detail-info-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <div>
-                        <div style="font-size:10px; color:var(--text-muted); font-weight:700;">Location</div>
-                        <div>${meeting.location}</div>
-                    </div>
-                </div>
-                <div class="detail-info-item">
-                    <i class="fa-regular fa-clock"></i>
-                    <div>
-                        <div style="font-size:10px; color:var(--text-muted); font-weight:700;">Duration</div>
-                        <div>${meeting.duration}</div>
-                    </div>
-                </div>
-            </div>
+        <div class="content-card">
+            <span style="font-size:12px; font-weight:800; color:var(--primary-blue);">${meeting.month} ${meeting.date}</span>
+            <h2 style="font-size:24px; font-weight:800; margin:4px 0 12px 0;">${meeting.title}</h2>
+            <img src="${meeting.image}" alt="${meeting.title}" style="width:100%; height:260px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:16px;">
+            <p style="margin-bottom:16px;">${meeting.description}</p>
+            <button class="btn-primary" onclick="alert('Added to your calendar!')"><i class="fa-regular fa-calendar-plus"></i> Add to Calendar</button>
         </div>
     `;
 }
@@ -339,66 +257,36 @@ function renderMeetingDetail(container, id) {
 function renderAbout(container) {
     container.innerHTML = `
         <h2 class="section-title">About Us</h2>
-        <p class="section-subtitle">Learn more about our mission, vision, and team.</p>
-
-        <div class="hero-card" style="margin-bottom: 16px;">
-            <h2>Together We Build More</h2>
-            <p>Empowering students to lead and innovate at Midade Mieh w Mieh.</p>
-        </div>
-
+        <p class="section-subtitle">Learn more about our mission and vision.</p>
         <div class="content-card">
             <h3><i class="fa-solid fa-bullseye"></i> Our Mission</h3>
             <p>To empower students, create opportunities, and build a stronger community through leadership, service, and collaboration.</p>
         </div>
-
         <div class="content-card">
             <h3><i class="fa-solid fa-eye"></i> Our Vision</h3>
             <p>A future where every student has the opportunity to grow, lead, and make a difference.</p>
-        </div>
-
-        <div class="content-card">
-            <h3><i class="fa-solid fa-heart"></i> Our Values</h3>
-            <ul class="values-list">
-                <li>Leadership</li>
-                <li>Integrity</li>
-                <li>Community</li>
-                <li>Excellence</li>
-            </ul>
         </div>
     `;
 }
 
 function renderPictures(container, currentCategory = 'all') {
-    const filtered = currentCategory === 'all' 
-        ? photosList 
-        : photosList.filter(p => p.category === currentCategory);
-
+    const filtered = currentCategory === 'all' ? photosList : photosList.filter(p => p.category === currentCategory);
     container.innerHTML = `
         <h2 class="section-title">Pictures</h2>
         <p class="section-subtitle">Moments, memories, and milestones.</p>
-
         <div class="filter-chips">
             <div class="chip ${currentCategory === 'all' ? 'active' : ''}" onclick="filterPhotos('all')">All</div>
             <div class="chip ${currentCategory === 'meetings' ? 'active' : ''}" onclick="filterPhotos('meetings')">Meetings</div>
             <div class="chip ${currentCategory === 'events' ? 'active' : ''}" onclick="filterPhotos('events')">Events</div>
             <div class="chip ${currentCategory === 'community' ? 'active' : ''}" onclick="filterPhotos('community')">Community</div>
-            <div class="chip ${currentCategory === 'other' ? 'active' : ''}" onclick="filterPhotos('other')">Other</div>
         </div>
-
         <div class="photo-grid">
-            ${filtered.map(p => `
-                <div class="photo-item">
-                    <img src="${p.url}" alt="Midade Mieh w Mieh Moment">
-                </div>
-            `).join('')}
+            ${filtered.map(p => `<div class="photo-item"><img src="${p.url}" alt="Moment"></div>`).join('')}
         </div>
     `;
 }
 
-window.filterPhotos = (category) => {
-    const container = document.getElementById('main-content');
-    renderPictures(container, category);
-};
+window.filterPhotos = (cat) => renderPictures(document.getElementById('main-content'), cat);
 
 function renderEvents(container) {
     container.innerHTML = `
@@ -408,20 +296,16 @@ function renderEvents(container) {
             <h3><i class="fa-solid fa-calendar-star"></i> Annual Student Summit</h3>
             <p>Join us next month for workshops, guest speakers, and collaborative student projects.</p>
         </div>
-        <div class="content-card">
-            <h3><i class="fa-solid fa-handshake-angle"></i> Community Charity Drive</h3>
-            <p>We are organizing a book and school supply donation drive across campus.</p>
-        </div>
     `;
 }
 
 function renderTeam(container) {
     container.innerHTML = `
         <h2 class="section-title">Our Team</h2>
-        <p class="section-subtitle">Meet the dedicated leaders behind Midade Mieh w Mieh.</p>
+        <p class="section-subtitle">Meet the leaders behind Midade Mieh w Mieh.</p>
         <div class="content-card">
             <h3><i class="fa-solid fa-user-tie"></i> Executive Board</h3>
-            <p>A dedicated group of students working together for community success, organizing events, and mentoring new members.</p>
+            <p>A dedicated group of students working together for community success.</p>
         </div>
     `;
 }
@@ -431,9 +315,8 @@ function renderContact(container) {
         <h2 class="section-title">Contact Us</h2>
         <p class="section-subtitle">Get in touch with our team.</p>
         <div class="content-card">
-            <h3><i class="fa-solid fa-envelope-circle-check"></i> Send a Message</h3>
-            <p style="margin-bottom: 12px;">Have questions or want to collaborate? Reach out to us at <strong>contact@midademiehwmieh.org</strong>.</p>
-            <button class="btn-primary" onclick="alert('Message form submitted successfully!')">Open Contact Form</button>
+            <h3><i class="fa-solid fa-envelope"></i> Send a Message</h3>
+            <p>Reach out to us at contact@midademiehwmieh.org</p>
         </div>
     `;
 }
@@ -441,22 +324,10 @@ function renderContact(container) {
 function renderMore(container) {
     container.innerHTML = `
         <h2 class="section-title">More Options</h2>
-        <p class="section-subtitle">Explore all sections of the application.</p>
-        <div class="content-card" style="cursor:pointer;" onclick="navigateTo('home')">
-            <h3><i class="fa-solid fa-house"></i> Home Dashboard</h3>
-            <p>Return to main welcome view.</p>
-        </div>
-        <div class="content-card" style="cursor:pointer;" onclick="navigateTo('about')">
-            <h3><i class="fa-solid fa-user-group"></i> About Us & Mission</h3>
-            <p>Learn about our core values.</p>
-        </div>
-        <div class="content-card" style="cursor:pointer;" onclick="navigateTo('team')">
-            <h3><i class="fa-solid fa-users"></i> Our Team</h3>
-            <p>Meet student organizers.</p>
-        </div>
-        <div class="content-card" style="cursor:pointer;" onclick="navigateTo('contact')">
-            <h3><i class="fa-solid fa-envelope"></i> Contact</h3>
-            <p>Get in touch with us.</p>
+        <p class="section-subtitle">Explore all sections.</p>
+        <div class="content-card" style="cursor:pointer;" onclick="navigateTo('auth')">
+            <h3><i class="fa-solid fa-user-lock"></i> Sign In / Sign Up</h3>
+            <p>Manage your Supabase account credentials.</p>
         </div>
     `;
 }

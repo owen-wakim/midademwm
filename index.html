@@ -3,256 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Realtime Chat</title>
+  <title>Global Chat</title>
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase JS v2 Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Supabase JS Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
+<body class="bg-slate-900 text-white min-h-screen flex flex-col font-sans">
 
-  <!-- TOP HEADER -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-          <i data-lucide="message-square" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-lg leading-none">Global Chat</h1>
-          <span id="status-badge" class="text-xs text-amber-400 flex items-center gap-1 mt-1">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Connecting...
-          </span>
-        </div>
-      </div>
-      <div id="user-nav" class="hidden flex items-center gap-3">
-        <span id="user-email-display" class="text-xs text-slate-400 hidden sm:inline"></span>
-        <button id="btn-logout" class="text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
-          Sign Out
-        </button>
-      </div>
+  <!-- NAVBAR -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-indigo-400">Global Chat</h1>
+    <div id="user-section" class="hidden flex items-center gap-4">
+      <span id="user-email" class="text-sm text-slate-300"></span>
+      <button id="btn-logout" class="bg-red-600 hover:bg-red-500 text-xs px-3 py-1.5 rounded font-semibold transition">Sign Out</button>
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-1 flex flex-col max-w-4xl w-full mx-auto p-4">
+  <main class="flex-1 max-w-3xl w-full mx-auto p-4 flex flex-col justify-center">
 
-    <!-- AUTH CARD (Shown when logged out) -->
-    <div id="auth-container" class="flex-1 flex items-center justify-center py-12">
-      <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
-        <div class="text-center mb-6">
-          <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
-            <i data-lucide="lock" class="w-6 h-6"></i>
-          </div>
-          <h2 class="text-xl font-bold">Welcome to Global Chat</h2>
-          <p class="text-slate-400 text-sm mt-1">Sign in or create an account to start messaging</p>
-        </div>
+    <!-- AUTHENTICATION FORM -->
+    <div id="auth-box" class="bg-slate-800 p-6 sm:p-8 rounded-xl border border-slate-700 shadow-xl max-w-md w-full mx-auto">
+      <h2 id="auth-title" class="text-2xl font-bold text-center mb-6">Log In</h2>
 
-        <!-- AUTH TABS -->
-        <div class="flex bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800/80">
-          <button id="tab-login" class="flex-1 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white transition">Log In</button>
-          <button id="tab-signup" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition">Sign Up</button>
-        </div>
+      <!-- GOOGLE LOGIN -->
+      <button id="btn-google" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-3 transition mb-6">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        Continue with Google
+      </button>
 
-        <!-- GOOGLE LOGIN BUTTON -->
-        <button id="btn-google" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 px-4 rounded-xl border border-slate-700 flex items-center justify-center gap-3 transition shadow-sm mb-5 text-sm">
-          <svg class="w-4 h-4" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          Continue with Google
-        </button>
-
-        <div class="relative flex py-2 items-center mb-5">
-          <div class="flex-grow border-t border-slate-800"></div>
-          <span class="flex-shrink mx-3 text-slate-500 text-[10px] tracking-wider uppercase font-semibold">Or with Email</span>
-          <div class="flex-grow border-t border-slate-800"></div>
-        </div>
-
-        <!-- AUTH FORM -->
-        <form id="auth-form" class="space-y-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Email Address</label>
-            <input type="email" id="auth-email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1">Password</label>
-            <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition">
-          </div>
-
-          <div id="auth-error" class="text-red-400 text-xs hidden bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg"></div>
-          <div id="auth-success" class="text-emerald-400 text-xs hidden bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-lg"></div>
-
-          <button type="submit" id="btn-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-            <span id="submit-text">Log In</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        </form>
+      <div class="relative flex py-2 items-center mb-6">
+        <div class="flex-grow border-t border-slate-700"></div>
+        <span class="flex-shrink mx-3 text-slate-400 text-xs">OR EMAIL</span>
+        <div class="flex-grow border-t border-slate-700"></div>
       </div>
+
+      <!-- EMAIL / PASS FORM -->
+      <form id="auth-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Email</label>
+          <input type="email" id="email" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm focus:border-indigo-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Password</label>
+          <input type="password" id="password" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm focus:border-indigo-500 outline-none">
+        </div>
+
+        <div id="auth-msg" class="text-xs text-red-400 hidden"></div>
+
+        <button type="submit" id="btn-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold py-2.5 rounded transition">Log In</button>
+      </form>
+
+      <p class="text-xs text-center text-slate-400 mt-6">
+        <span id="toggle-text">Don't have an account?</span> 
+        <button id="toggle-auth" class="text-indigo-400 underline font-semibold ml-1">Sign Up</button>
+      </p>
     </div>
 
-    <!-- CHAT INTERFACE (Shown when logged in) -->
-    <div id="chat-container" class="hidden flex-1 flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl h-[78vh]">
-      
-      <!-- MESSAGES FEED -->
-      <div id="messages-list" class="flex-1 overflow-y-auto p-4 space-y-3.5 scroll-smooth">
-        <div class="text-center py-8 text-slate-500 text-xs">Loading message history...</div>
-      </div>
+    <!-- CHAT BOX -->
+    <div id="chat-box" class="hidden bg-slate-800 border border-slate-700 rounded-xl flex flex-col h-[75vh] overflow-hidden">
+      <!-- MESSAGES CONTAINER -->
+      <div id="messages" class="flex-1 p-4 overflow-y-auto space-y-3"></div>
 
       <!-- CHAT INPUT -->
-      <form id="chat-form" class="p-3 border-t border-slate-800 bg-slate-900/90 flex gap-2">
-        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" required class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white p-2.5 rounded-xl transition flex items-center justify-center">
-          <i data-lucide="send" class="w-5 h-5"></i>
-        </button>
+      <form id="chat-form" class="p-3 border-t border-slate-700 flex gap-2 bg-slate-900">
+        <input type="text" id="chat-input" placeholder="Type a message..." required class="flex-1 bg-slate-800 border border-slate-700 rounded px-4 py-2 text-sm focus:border-indigo-500 outline-none">
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded font-semibold text-sm transition">Send</button>
       </form>
     </div>
 
   </main>
 
   <script>
-    // Initialize Lucide Icons
-    lucide.createIcons();
-
-    // 1. SUPABASE CONFIGURATION
+    // 1. SUPABASE CLIENT SETUP
     const SUPABASE_URL = 'https://ogopytqswaeljinyvvei.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6210NzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6MjEwNzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ';
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // State
     let currentUser = null;
-    let isSignUpMode = false;
-    let realtimeChannel = null;
+    let isSignUp = false;
 
     // DOM Elements
-    const authContainer = document.getElementById('auth-container');
-    const chatContainer = document.getElementById('chat-container');
-    const userNav = document.getElementById('user-nav');
-    const userEmailDisplay = document.getElementById('user-email-display');
-    const statusBadge = document.getElementById('status-badge');
-    const tabLogin = document.getElementById('tab-login');
-    const tabSignup = document.getElementById('tab-signup');
-    const authForm = document.getElementById('auth-form');
-    const submitText = document.getElementById('submit-text');
-    const authError = document.getElementById('auth-error');
-    const authSuccess = document.getElementById('auth-success');
-    const messagesList = document.getElementById('messages-list');
+    const authBox = document.getElementById('auth-box');
+    const chatBox = document.getElementById('chat-box');
+    const userSection = document.getElementById('user-section');
+    const userEmail = document.getElementById('user-email');
+    const authTitle = document.getElementById('auth-title');
+    const btnSubmit = document.getElementById('btn-submit');
+    const toggleText = document.getElementById('toggle-text');
+    const toggleAuth = document.getElementById('toggle-auth');
+    const authMsg = document.getElementById('auth-msg');
+    const messages = document.getElementById('messages');
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
 
-    // 2. AUTHENTICATION LOGIC
-    tabLogin.addEventListener('click', () => setAuthMode(false));
-    tabSignup.addEventListener('click', () => setAuthMode(true));
-
-    function setAuthMode(signup) {
-      isSignUpMode = signup;
-      hideAuthAlerts();
-      if (signup) {
-        tabSignup.className = "flex-1 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white transition";
-        tabLogin.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
-        submitText.textContent = "Sign Up";
+    // 2. TOGGLE LOGIN / SIGNUP
+    toggleAuth.addEventListener('click', () => {
+      isSignUp = !isSignUp;
+      authMsg.classList.add('hidden');
+      if (isSignUp) {
+        authTitle.textContent = "Sign Up";
+        btnSubmit.textContent = "Create Account";
+        toggleText.textContent = "Already have an account?";
+        toggleAuth.textContent = "Log In";
       } else {
-        tabLogin.className = "flex-1 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white transition";
-        tabSignup.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
-        submitText.textContent = "Log In";
+        authTitle.textContent = "Log In";
+        btnSubmit.textContent = "Log In";
+        toggleText.textContent = "Don't have an account?";
+        toggleAuth.textContent = "Sign Up";
       }
-    }
+    });
 
-    // Google OAuth Trigger
+    // 3. GOOGLE LOGIN
     document.getElementById('btn-google').addEventListener('click', async () => {
-      hideAuthAlerts();
-      const { error } = await supabase.auth.signInWithOAuth({
+      await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
+        options: { redirectTo: window.location.origin }
       });
-      if (error) showAuthError(error.message);
     });
 
-    // Form Submit (Login / Signup)
-    authForm.addEventListener('submit', async (e) => {
+    // 4. EMAIL / PASS SUBMIT
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      hideAuthAlerts();
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
+      authMsg.classList.add('hidden');
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-      if (isSignUpMode) {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) {
-          showAuthError(error.message);
-        } else {
-          showAuthSuccess("Account created successfully!");
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) showAuthError(error.message);
+      let res = isSignUp 
+        ? await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signInWithPassword({ email, password });
+
+      if (res.error) {
+        authMsg.textContent = res.error.message;
+        authMsg.classList.remove('hidden');
       }
     });
 
-    // Sign Out Trigger
+    // 5. SIGN OUT
     document.getElementById('btn-logout').addEventListener('click', async () => {
       await supabase.auth.signOut();
     });
 
-    function showAuthError(msg) {
-      authError.textContent = msg;
-      authError.classList.remove('hidden');
-    }
-
-    function showAuthSuccess(msg) {
-      authSuccess.textContent = msg;
-      authSuccess.classList.remove('hidden');
-    }
-
-    function hideAuthAlerts() {
-      authError.classList.add('hidden');
-      authSuccess.classList.add('hidden');
-    }
-
-    // 3. INITIALIZATION & SESSION WATCHER
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      handleAuthState(session);
-
-      supabase.auth.onAuthStateChange((_event, session) => {
-        handleAuthState(session);
-      });
-    }
-
-    function handleAuthState(session) {
+    // 6. SESSION MONITOR
+    supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         currentUser = session.user;
-        userEmailDisplay.textContent = currentUser.email;
-        authContainer.classList.add('hidden');
-        chatContainer.classList.remove('hidden');
-        userNav.classList.remove('hidden');
+        userEmail.textContent = currentUser.email;
+        authBox.classList.add('hidden');
+        chatBox.classList.remove('hidden');
+        userSection.classList.remove('hidden');
 
-        statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live`;
-        statusBadge.className = "text-xs text-emerald-400 flex items-center gap-1 mt-1";
-
-        loadInitialMessages();
-        subscribeToRealtime();
+        loadMessages();
+        listenToNewMessages();
       } else {
         currentUser = null;
-        authContainer.classList.remove('hidden');
-        chatContainer.classList.add('hidden');
-        userNav.classList.add('hidden');
-
-        statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Offline`;
-        statusBadge.className = "text-xs text-amber-400 flex items-center gap-1 mt-1";
-
-        if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+        authBox.classList.remove('hidden');
+        chatBox.classList.add('hidden');
+        userSection.classList.add('hidden');
       }
-    }
+    });
 
-    // 4. CHAT & REALTIME LOGIC
-    async function loadInitialMessages() {
+    // 7. FETCH MESSAGES
+    async function loadMessages() {
       const { data, error } = await supabase
         .from('messages')
         .select('*')
@@ -260,86 +179,65 @@
         .limit(100);
 
       if (error) {
-        messagesList.innerHTML = `<div class="text-center py-8 text-red-400 text-xs">Failed to load messages: ${error.message}</div>`;
+        messages.innerHTML = `<p class="text-xs text-red-400">Error loading messages: ${error.message}</p>`;
         return;
       }
 
-      messagesList.innerHTML = '';
-      if (data.length === 0) {
-        messagesList.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">No messages yet. Send the first one!</div>`;
-      } else {
-        data.forEach(appendMessage);
-        scrollToBottom();
-      }
+      messages.innerHTML = '';
+      data.forEach(addMessageToDOM);
+      scrollToBottom();
     }
 
-    function subscribeToRealtime() {
-      if (realtimeChannel) supabase.removeChannel(realtimeChannel);
-
-      realtimeChannel = supabase
-        .channel('public:messages')
+    // 8. REALTIME MESSAGES
+    function listenToNewMessages() {
+      supabase
+        .channel('chat-room')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-          // Remove empty chat state placeholder if present
-          if (messagesList.children.length === 1 && messagesList.children[0].classList.contains('text-center')) {
-            messagesList.innerHTML = '';
-          }
-          appendMessage(payload.new);
+          addMessageToDOM(payload.new);
           scrollToBottom();
         })
         .subscribe();
     }
 
+    // 9. SEND MESSAGE
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const content = chatInput.value.trim();
-      if (!content || !currentUser) return;
+      const text = chatInput.value.trim();
+      if (!text || !currentUser) return;
 
       chatInput.value = '';
 
       const { error } = await supabase.from('messages').insert([
-        {
-          user_id: currentUser.id,
-          user_email: currentUser.email,
-          content: content
-        }
+        { user_id: currentUser.id, user_email: currentUser.email, content: text }
       ]);
 
-      if (error) {
-        alert('Failed to send message: ' + error.message);
-      }
+      if (error) alert('Could not send: ' + error.message);
     });
 
-    function appendMessage(msg) {
-      const isMe = currentUser && msg.user_id === currentUser.id;
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
+    function addMessageToDOM(msg) {
+      const isMine = currentUser && msg.user_id === currentUser.id;
+      const div = document.createElement('div');
+      div.className = `flex flex-col ${isMine ? 'items-end' : 'items-start'}`;
 
-      const timeStr = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      msgDiv.innerHTML = `
-        <span class="text-[10px] text-slate-500 mb-1 px-1">${isMe ? 'You' : msg.user_email} • ${timeStr}</span>
-        <div class="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-          isMe 
-            ? 'bg-indigo-600 text-white rounded-tr-none' 
-            : 'bg-slate-800 text-slate-100 rounded-tl-none border border-slate-700/50'
+      div.innerHTML = `
+        <span class="text-[10px] text-slate-400 mb-0.5">${isMine ? 'You' : msg.user_email}</span>
+        <div class="px-3.5 py-2 rounded-lg text-sm max-w-[80%] ${
+          isMine ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-100'
         }">
           ${escapeHtml(msg.content)}
         </div>
       `;
 
-      messagesList.appendChild(msgDiv);
+      messages.appendChild(div);
     }
 
     function scrollToBottom() {
-      messagesList.scrollTop = messagesList.scrollHeight;
+      messages.scrollTop = messages.scrollHeight;
     }
 
     function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
-
-    // Start App
-    init();
   </script>
 </body>
 </html>

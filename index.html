@@ -1,89 +1,479 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midade Mieh w Mieh - Together We Build More</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Realtime Chat - Supabase</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
 </head>
-<body>
+<body class="h-full flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
 
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="logo-area" id="brand-logo-btn">
-                <span class="crown-icon">👑</span>
-                <h1 class="brand-title">Midade Mieh w Mieh</h1>
-            </div>
-            <div class="header-actions">
-                <button class="icon-btn" id="auth-nav-btn" title="Account"><i class="fa-solid fa-user"></i></button>
-                <button class="icon-btn" id="search-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="icon-btn" id="menu-btn" title="Menu"><i class="fa-solid fa-bars"></i></button>
-            </div>
-        </header>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
-        <!-- Main View Area -->
-        <main id="main-content" class="content-viewport">
-            <!-- Rendered by script.js -->
-        </main>
-
-        <!-- Bottom Navigation Bar -->
-        <nav class="bottom-nav" id="bottom-nav">
-            <button class="nav-item active" data-target="home">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" data-target="meetings">
-                <i class="fa-solid fa-calendar-days"></i>
-                <span>Meetings</span>
-            </button>
-            <button class="nav-item" data-target="pictures">
-                <i class="fa-solid fa-image"></i>
-                <span>Pictures</span>
-            </button>
-            <button class="nav-item" data-target="more">
-                <i class="fa-solid fa-bars"></i>
-                <span>More</span>
-            </button>
-        </nav>
-
-        <!-- Side Drawer Overlay -->
-        <div class="drawer-overlay" id="drawer-overlay">
-            <div class="drawer-content">
-                <div class="drawer-header">
-                    <div class="logo-area" id="drawer-brand-btn">
-                        <span class="crown-icon">👑</span>
-                        <h1 class="brand-title" style="font-size:16px; color:white;">Midade Mieh w Mieh</h1>
-                    </div>
-                    <button class="icon-btn close-drawer" id="close-drawer-btn"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <ul class="drawer-menu-list">
-                    <li data-nav="home"><i class="fa-solid fa-house"></i><span>Home</span></li>
-                    <li data-nav="meetings"><i class="fa-solid fa-calendar-days"></i><span>Meetings</span></li>
-                    <li data-nav="about"><i class="fa-solid fa-user-group"></i><span>About Us</span></li>
-                    <li data-nav="pictures"><i class="fa-solid fa-image"></i><span>Pictures</span></li>
-                    <li data-nav="events"><i class="fa-solid fa-calendar-plus"></i><span>Events</span></li>
-                    <li data-nav="team"><i class="fa-solid fa-users"></i><span>Our Team</span></li>
-                    <li data-nav="contact"><i class="fa-solid fa-envelope"></i><span>Contact</span></li>
-                    <li data-nav="auth"><i class="fa-solid fa-user-lock"></i><span>Sign In / Sign Up</span></li>
-                </ul>
-                <div class="drawer-footer">
-                    <div class="footer-tagline">👑 Together We Build More</div>
-                    <div class="footer-copy">Midade Mieh w Mieh © 2025</div>
-                </div>
-            </div>
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md px-4 py-3 shrink-0 sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-comments text-lg"></i>
         </div>
+        <div>
+          <h1 class="font-bold text-slate-100 text-base sm:text-lg leading-tight">Global Chat</h1>
+          <span class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+            <span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span id="status-text" class="font-medium">Connecting...</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- User Profile Header (Visible when logged in) -->
+      <div id="user-header-profile" class="hidden items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p id="user-email-display" class="text-xs font-semibold text-slate-200">user@example.com</p>
+          <span class="text-[10px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/50 px-2 py-0.5 rounded-full inline-block mt-0.5 font-medium">Online</span>
+        </div>
+        <button id="btn-logout" class="bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white px-3.5 py-2 rounded-xl border border-slate-700/80 text-xs font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 flex flex-col min-h-0">
+
+    <!-- AUTH SECTION (Show when logged out) -->
+    <div id="auth-section" class="my-auto max-w-md w-full mx-auto bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600/10 text-indigo-400 mb-3 border border-indigo-500/20">
+          <i class="fa-solid fa-lock text-xl"></i>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Welcome to Global Chat</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Sign in or create an account to start messaging</p>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="flex bg-slate-950/80 p-1 rounded-2xl mb-6 border border-slate-800/80">
+        <button id="tab-login" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 text-white transition-all shadow-md">Log In</button>
+        <button id="tab-signup" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition-all">Sign Up</button>
+      </div>
+
+      <!-- Google OAuth Button -->
+      <button id="btn-google-login" class="w-full bg-slate-800 hover:bg-slate-750 text-slate-100 font-medium py-2.5 px-4 rounded-2xl border border-slate-700/80 flex items-center justify-center gap-3 transition-all hover:border-slate-600 active:scale-[0.99] text-xs sm:text-sm shadow-sm group">
+        <svg class="w-4 h-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span class="font-semibold">Continue with Google</span>
+      </button>
+
+      <div class="relative flex py-3 items-center my-2">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-3 text-[10px] text-slate-500 uppercase tracking-widest font-bold">Or with Email</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <!-- Email / Pass Form -->
+      <form id="auth-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Email Address</label>
+          <input type="email" id="auth-email" required placeholder="you@domain.com"
+            class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+          <input type="password" id="auth-password" required placeholder="••••••••" minlength="6"
+            class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+        </div>
+
+        <button type="submit" id="btn-submit-auth" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-2xl transition-all text-xs sm:text-sm mt-2 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 active:scale-[0.99]">
+          <span id="auth-btn-text">Log In</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
     </div>
 
-    <!-- Load Supabase Client SDK first -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Separate Auth File -->
-    <script src="auth.js"></script>
-    <!-- Main Script File -->
-    <script src="script.js"></script>
+    <!-- CHAT SECTION (Show when logged in) -->
+    <div id="chat-section" class="hidden flex-1 flex-col bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl min-h-0 backdrop-blur-xl">
+      
+      <!-- Messages List Window -->
+      <div id="messages-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+        <div id="loading-messages" class="h-full flex flex-col items-center justify-center text-slate-500 gap-3">
+          <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500"></i>
+          <span class="text-xs sm:text-sm font-medium">Fetching global chat room...</span>
+        </div>
+      </div>
+
+      <!-- Chat Input Toolbar -->
+      <div class="p-3 sm:p-4 bg-slate-950/80 border-t border-slate-800/80">
+        <form id="chat-form" class="flex items-center gap-2 sm:gap-3">
+          <input type="text" id="chat-input" placeholder="Type a message to everyone..." autocomplete="off" required
+            class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+          <button type="submit" id="btn-send-message"
+            class="bg-indigo-600 hover:bg-indigo-500 text-white p-3 sm:px-6 sm:py-3 rounded-2xl transition-all font-semibold flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-lg shadow-indigo-600/25 active:scale-95">
+            <span class="hidden sm:inline">Send</span>
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="py-3 px-4 text-center text-[11px] text-slate-500 border-t border-slate-900/80 shrink-0">
+    Global Realtime Chat • Embedded Supabase Authentication & Realtime Postgres Listener
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // Embedded Supabase Credentials
+    const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6MjEwNzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ";
+
+    // Initialize Client
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // State Variables
+    let currentUser = null;
+    let activeAuthTab = 'login';
+    let realtimeChannel = null;
+
+    // DOM References
+    const elements = {
+      statusDot: document.getElementById('status-dot'),
+      statusText: document.getElementById('status-text'),
+      userHeaderProfile: document.getElementById('user-header-profile'),
+      userEmailDisplay: document.getElementById('user-email-display'),
+      btnLogout: document.getElementById('btn-logout'),
+      authSection: document.getElementById('auth-section'),
+      chatSection: document.getElementById('chat-section'),
+      tabLogin: document.getElementById('tab-login'),
+      tabSignup: document.getElementById('tab-signup'),
+      btnGoogleLogin: document.getElementById('btn-google-login'),
+      authForm: document.getElementById('auth-form'),
+      authEmail: document.getElementById('auth-email'),
+      authPassword: document.getElementById('auth-password'),
+      btnSubmitAuth: document.getElementById('btn-submit-auth'),
+      authBtnText: document.getElementById('auth-btn-text'),
+      messagesContainer: document.getElementById('messages-container'),
+      loadingMessages: document.getElementById('loading-messages'),
+      chatForm: document.getElementById('chat-form'),
+      chatInput: document.getElementById('chat-input'),
+      toastContainer: document.getElementById('toast-container')
+    };
+
+    // Notification Helper
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      const bgColors = {
+        success: 'bg-emerald-950/90 border-emerald-800/80 text-emerald-200',
+        error: 'bg-rose-950/90 border-rose-800/80 text-rose-200',
+        info: 'bg-slate-900/90 border-slate-800 text-slate-200'
+      };
+      
+      toast.className = `pointer-events-auto p-3.5 rounded-2xl border text-xs font-semibold shadow-xl backdrop-blur-md transition-all duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-3 ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `
+        <span class="flex items-center gap-2">
+          <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-400' : type === 'error' ? 'fa-circle-exclamation text-rose-400' : 'fa-circle-info text-indigo-400'}"></i>
+          ${message}
+        </span>
+        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white transition-colors p-1"><i class="fa-solid fa-xmark"></i></button>
+      `;
+
+      elements.toastContainer.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 4500);
+    }
+
+    // Status Indicator Helper
+    function updateConnectionStatus(status) {
+      if (status === 'connected') {
+        elements.statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        elements.statusText.innerText = 'Online';
+      } else {
+        elements.statusDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+        elements.statusText.innerText = 'Connecting...';
+      }
+    }
+
+    // Auth Handlers
+    async function initSession() {
+      try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+
+        if (session && session.user) {
+          currentUser = session.user;
+          renderAuthenticatedUI();
+        } else {
+          currentUser = null;
+          renderLoggedOutUI();
+        }
+
+        // Realtime Auth Listener
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (session && session.user) {
+            currentUser = session.user;
+            renderAuthenticatedUI();
+          } else {
+            currentUser = null;
+            renderLoggedOutUI();
+          }
+        });
+      } catch (err) {
+        console.error('Session error:', err);
+        showToast('Error checking authentication session', 'error');
+        renderLoggedOutUI();
+      }
+    }
+
+    function renderAuthenticatedUI() {
+      updateConnectionStatus('connected');
+      elements.authSection.classList.add('hidden');
+      elements.chatSection.classList.remove('hidden');
+      elements.chatSection.classList.add('flex');
+      elements.userHeaderProfile.classList.remove('hidden');
+      elements.userHeaderProfile.classList.add('flex');
+      elements.userEmailDisplay.innerText = currentUser.email;
+
+      loadInitialMessages();
+      subscribeToRealtimeChat();
+    }
+
+    function renderLoggedOutUI() {
+      updateConnectionStatus('disconnected');
+      elements.authSection.classList.remove('hidden');
+      elements.chatSection.classList.add('hidden');
+      elements.chatSection.classList.remove('flex');
+      elements.userHeaderProfile.classList.add('hidden');
+      elements.userHeaderProfile.classList.remove('flex');
+
+      if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+      }
+    }
+
+    // Tab Switchers
+    elements.tabLogin.addEventListener('click', () => {
+      activeAuthTab = 'login';
+      elements.tabLogin.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 text-white transition-all shadow-md';
+      elements.tabSignup.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition-all';
+      elements.authBtnText.innerText = 'Log In';
+    });
+
+    elements.tabSignup.addEventListener('click', () => {
+      activeAuthTab = 'signup';
+      elements.tabSignup.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 text-white transition-all shadow-md';
+      elements.tabLogin.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-400 hover:text-white transition-all';
+      elements.authBtnText.innerText = 'Sign Up';
+    });
+
+    // Form Submit
+    elements.authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = elements.authEmail.value.trim();
+      const password = elements.authPassword.value.trim();
+
+      elements.btnSubmitAuth.disabled = true;
+      elements.btnSubmitAuth.classList.add('opacity-50');
+
+      try {
+        if (activeAuthTab === 'login') {
+          const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          showToast('Welcome back!', 'success');
+        } else {
+          const { error } = await supabaseClient.auth.signUp({ email, password });
+          if (error) throw error;
+          showToast('Account created! Check your email if verification is required.', 'success');
+        }
+      } catch (err) {
+        showToast(err.message || 'Authentication failed', 'error');
+      } finally {
+        elements.btnSubmitAuth.disabled = false;
+        elements.btnSubmitAuth.classList.remove('opacity-50');
+      }
+    });
+
+    // Google OAuth Handler
+    elements.btnGoogleLogin.addEventListener('click', async () => {
+      try {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin
+          }
+        });
+        if (error) throw error;
+      } catch (err) {
+        showToast(err.message || 'Google Auth Error', 'error');
+      }
+    });
+
+    // Sign Out
+    elements.btnLogout.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      showToast('You have been signed out', 'info');
+    });
+
+    // Load Chat Messages
+    async function loadInitialMessages() {
+      elements.messagesContainer.innerHTML = '';
+      elements.messagesContainer.appendChild(elements.loadingMessages);
+
+      try {
+        const { data: messages, error } = await supabaseClient
+          .from('messages')
+          .select('*')
+          .order('created_at', { ascending: true })
+          .limit(100);
+
+        if (error) throw error;
+
+        elements.messagesContainer.innerHTML = '';
+
+        if (!messages || messages.length === 0) {
+          elements.messagesContainer.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-slate-500 gap-2">
+              <i class="fa-regular fa-comments text-4xl text-slate-700"></i>
+              <p class="text-xs sm:text-sm font-medium">No messages yet. Be the first to start the chat!</p>
+            </div>
+          `;
+        } else {
+          messages.forEach(msg => appendMessageUI(msg));
+          scrollToBottom();
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        elements.messagesContainer.innerHTML = `
+          <div class="p-5 bg-rose-950/50 border border-rose-800/80 rounded-2xl text-rose-200 text-xs sm:text-sm text-center my-auto">
+            <i class="fa-solid fa-triangle-exclamation text-xl mb-2 text-rose-400 block"></i>
+            Failed to load messages. Make sure you executed the SQL script in Supabase to create the <b>messages</b> table.
+          </div>
+        `;
+      }
+    }
+
+    // Append single message to DOM
+    function appendMessageUI(msg) {
+      // Clear empty state illustration if visible
+      if (elements.messagesContainer.querySelector('.fa-comments') || elements.messagesContainer.querySelector('.fa-triangle-exclamation')) {
+        elements.messagesContainer.innerHTML = '';
+      }
+
+      const isMe = currentUser && currentUser.id === msg.user_id;
+      const date = new Date(msg.created_at);
+      const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const senderName = msg.user_email ? msg.user_email.split('@')[0] : 'Anonymous';
+
+      const msgBubble = document.createElement('div');
+      msgBubble.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-2.5`;
+
+      msgBubble.innerHTML = `
+        <div class="flex items-center gap-1.5 mb-1 text-[10px] text-slate-400 px-1">
+          <span class="font-semibold ${isMe ? 'text-indigo-300' : 'text-slate-300'}">${isMe ? 'You' : senderName}</span>
+          <span class="text-[8px] text-slate-600">•</span>
+          <span class="text-slate-500">${timeStr}</span>
+        </div>
+        <div class="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed break-words shadow-sm ${
+          isMe 
+            ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-tr-none shadow-indigo-600/10' 
+            : 'bg-slate-800/90 text-slate-100 rounded-tl-none border border-slate-700/60'
+        }">
+          ${escapeHtml(msg.content)}
+        </div>
+      `;
+
+      elements.messagesContainer.appendChild(msgBubble);
+      scrollToBottom();
+    }
+
+    function scrollToBottom() {
+      elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    // Send Message Handler
+    elements.chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = elements.chatInput.value.trim();
+      if (!content || !currentUser) return;
+
+      elements.chatInput.value = '';
+
+      try {
+        const { error } = await supabaseClient.from('messages').insert([
+          {
+            content: content,
+            user_id: currentUser.id,
+            user_email: currentUser.email
+          }
+        ]);
+
+        if (error) throw error;
+      } catch (err) {
+        showToast(err.message || 'Failed to send message', 'error');
+      }
+    });
+
+    // Realtime Listener Registration
+    function subscribeToRealtimeChat() {
+      if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+      }
+
+      realtimeChannel = supabaseClient
+        .channel('public:messages')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'messages' },
+          (payload) => {
+            appendMessageUI(payload.new);
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('Connected to realtime message feed');
+          }
+        });
+    }
+
+    // App Startup
+    window.addEventListener('DOMContentLoaded', () => {
+      initSession();
+    });
+  </script>
 </body>
 </html>

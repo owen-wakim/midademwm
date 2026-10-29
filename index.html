@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Chat</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- Supabase JS Library -->
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS CDN (v2) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex flex-col font-sans">
@@ -16,7 +16,7 @@
     <h1 class="text-xl font-bold text-indigo-400">Global Chat</h1>
     <div id="user-section" class="hidden flex items-center gap-4">
       <span id="user-email" class="text-sm text-slate-300"></span>
-      <button id="btn-logout" class="bg-red-600 hover:bg-red-500 text-xs px-3 py-1.5 rounded font-semibold transition">Sign Out</button>
+      <button id="btn-logout" class="bg-red-600 hover:bg-red-500 text-xs px-3 py-1.5 rounded font-semibold transition cursor-pointer">Sign Out</button>
     </div>
   </header>
 
@@ -28,7 +28,7 @@
       <h2 id="auth-title" class="text-2xl font-bold text-center mb-6">Log In</h2>
 
       <!-- GOOGLE LOGIN -->
-      <button id="btn-google" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-3 transition mb-6">
+      <button id="btn-google" type="button" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-3 transition mb-6 cursor-pointer">
         <svg class="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -55,14 +55,14 @@
           <input type="password" id="password" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm focus:border-indigo-500 outline-none">
         </div>
 
-        <div id="auth-msg" class="text-xs text-red-400 hidden"></div>
+        <div id="auth-msg" class="text-xs p-2.5 rounded hidden"></div>
 
-        <button type="submit" id="btn-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold py-2.5 rounded transition">Log In</button>
+        <button type="submit" id="btn-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold py-2.5 rounded transition cursor-pointer">Log In</button>
       </form>
 
       <p class="text-xs text-center text-slate-400 mt-6">
         <span id="toggle-text">Don't have an account?</span> 
-        <button id="toggle-auth" class="text-indigo-400 underline font-semibold ml-1">Sign Up</button>
+        <button id="toggle-auth" type="button" class="text-indigo-400 underline font-semibold ml-1 cursor-pointer">Sign Up</button>
       </p>
     </div>
 
@@ -74,170 +74,184 @@
       <!-- CHAT INPUT -->
       <form id="chat-form" class="p-3 border-t border-slate-700 flex gap-2 bg-slate-900">
         <input type="text" id="chat-input" placeholder="Type a message..." required class="flex-1 bg-slate-800 border border-slate-700 rounded px-4 py-2 text-sm focus:border-indigo-500 outline-none">
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded font-semibold text-sm transition">Send</button>
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded font-semibold text-sm transition cursor-pointer">Send</button>
       </form>
     </div>
 
   </main>
 
   <script>
-    // 1. SUPABASE CLIENT SETUP
-    const SUPABASE_URL = 'https://ogopytqswaeljinyvvei.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6MjEwNzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ';
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. SUPABASE CLIENT SETUP
+      const SUPABASE_URL = 'https://ogopytqswaeljinyvvei.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6MjEwNzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let currentUser = null;
-    let isSignUp = false;
+      let currentUser = null;
+      let isSignUp = false;
 
-    // DOM Elements
-    const authBox = document.getElementById('auth-box');
-    const chatBox = document.getElementById('chat-box');
-    const userSection = document.getElementById('user-section');
-    const userEmail = document.getElementById('user-email');
-    const authTitle = document.getElementById('auth-title');
-    const btnSubmit = document.getElementById('btn-submit');
-    const toggleText = document.getElementById('toggle-text');
-    const toggleAuth = document.getElementById('toggle-auth');
-    const authMsg = document.getElementById('auth-msg');
-    const messages = document.getElementById('messages');
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
+      // DOM Elements
+      const authBox = document.getElementById('auth-box');
+      const chatBox = document.getElementById('chat-box');
+      const userSection = document.getElementById('user-section');
+      const userEmail = document.getElementById('user-email');
+      const authTitle = document.getElementById('auth-title');
+      const btnSubmit = document.getElementById('btn-submit');
+      const toggleText = document.getElementById('toggle-text');
+      const toggleAuth = document.getElementById('toggle-auth');
+      const authMsg = document.getElementById('auth-msg');
+      const messages = document.getElementById('messages');
+      const chatForm = document.getElementById('chat-form');
+      const chatInput = document.getElementById('chat-input');
 
-    // 2. TOGGLE LOGIN / SIGNUP
-    toggleAuth.addEventListener('click', () => {
-      isSignUp = !isSignUp;
-      authMsg.classList.add('hidden');
-      if (isSignUp) {
-        authTitle.textContent = "Sign Up";
-        btnSubmit.textContent = "Create Account";
-        toggleText.textContent = "Already have an account?";
-        toggleAuth.textContent = "Log In";
-      } else {
-        authTitle.textContent = "Log In";
-        btnSubmit.textContent = "Log In";
-        toggleText.textContent = "Don't have an account?";
-        toggleAuth.textContent = "Sign Up";
-      }
-    });
-
-    // 3. GOOGLE LOGIN
-    document.getElementById('btn-google').addEventListener('click', async () => {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin }
+      // 2. TOGGLE LOGIN / SIGNUP
+      toggleAuth.addEventListener('click', () => {
+        isSignUp = !isSignUp;
+        authMsg.classList.add('hidden');
+        if (isSignUp) {
+          authTitle.textContent = "Sign Up";
+          btnSubmit.textContent = "Create Account";
+          toggleText.textContent = "Already have an account?";
+          toggleAuth.textContent = "Log In";
+        } else {
+          authTitle.textContent = "Log In";
+          btnSubmit.textContent = "Log In";
+          toggleText.textContent = "Don't have an account?";
+          toggleAuth.textContent = "Sign Up";
+        }
       });
-    });
 
-    // 4. EMAIL / PASS SUBMIT
-    document.getElementById('auth-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      authMsg.classList.add('hidden');
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      // 3. GOOGLE LOGIN
+      document.getElementById('btn-google').addEventListener('click', async () => {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: window.location.origin }
+        });
+        if (error) {
+          authMsg.textContent = error.message;
+          authMsg.className = "text-xs p-2.5 rounded bg-red-500/20 text-red-400";
+        }
+      });
 
-      let res = isSignUp 
-        ? await supabase.auth.signUp({ email, password })
-        : await supabase.auth.signInWithPassword({ email, password });
+      // 4. EMAIL / PASS SUBMIT
+      document.getElementById('auth-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        authMsg.classList.add('hidden');
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-      if (res.error) {
-        authMsg.textContent = res.error.message;
-        authMsg.classList.remove('hidden');
+        if (isSignUp) {
+          const { data, error } = await supabase.auth.signUp({ email, password });
+          if (error) {
+            authMsg.textContent = error.message;
+            authMsg.className = "text-xs p-2.5 rounded bg-red-500/20 text-red-400";
+          } else {
+            authMsg.textContent = "Account created! Logging in...";
+            authMsg.className = "text-xs p-2.5 rounded bg-emerald-500/20 text-emerald-400";
+          }
+        } else {
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) {
+            authMsg.textContent = error.message;
+            authMsg.className = "text-xs p-2.5 rounded bg-red-500/20 text-red-400";
+          }
+        }
+      });
+
+      // 5. SIGN OUT
+      document.getElementById('btn-logout').addEventListener('click', async () => {
+        await supabase.auth.signOut();
+      });
+
+      // 6. SESSION MONITOR
+      supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          currentUser = session.user;
+          userEmail.textContent = currentUser.email;
+          authBox.classList.add('hidden');
+          chatBox.classList.remove('hidden');
+          userSection.classList.remove('hidden');
+
+          loadMessages();
+          listenToNewMessages();
+        } else {
+          currentUser = null;
+          authBox.classList.remove('hidden');
+          chatBox.classList.add('hidden');
+          userSection.classList.add('hidden');
+        }
+      });
+
+      // 7. FETCH MESSAGES
+      async function loadMessages() {
+        const { data, error } = await supabase
+          .from('messages')
+          .select('*')
+          .order('created_at', { ascending: true })
+          .limit(100);
+
+        if (error) {
+          messages.innerHTML = `<p class="text-xs text-red-400">Error loading messages: ${error.message}</p>`;
+          return;
+        }
+
+        messages.innerHTML = '';
+        data.forEach(addMessageToDOM);
+        scrollToBottom();
+      }
+
+      // 8. REALTIME MESSAGES
+      function listenToNewMessages() {
+        supabase
+          .channel('chat-room')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+            addMessageToDOM(payload.new);
+            scrollToBottom();
+          })
+          .subscribe();
+      }
+
+      // 9. SEND MESSAGE
+      chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = chatInput.value.trim();
+        if (!text || !currentUser) return;
+
+        chatInput.value = '';
+
+        const { error } = await supabase.from('messages').insert([
+          { user_id: currentUser.id, user_email: currentUser.email, content: text }
+        ]);
+
+        if (error) alert('Could not send message: ' + error.message);
+      });
+
+      function addMessageToDOM(msg) {
+        const isMine = currentUser && msg.user_id === currentUser.id;
+        const div = document.createElement('div');
+        div.className = `flex flex-col ${isMine ? 'items-end' : 'items-start'}`;
+
+        div.innerHTML = `
+          <span class="text-[10px] text-slate-400 mb-0.5">${isMine ? 'You' : msg.user_email}</span>
+          <div class="px-3.5 py-2 rounded-lg text-sm max-w-[80%] ${
+            isMine ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-100'
+          }">
+            ${escapeHtml(msg.content)}
+          </div>
+        `;
+
+        messages.appendChild(div);
+      }
+
+      function scrollToBottom() {
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       }
     });
-
-    // 5. SIGN OUT
-    document.getElementById('btn-logout').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-    });
-
-    // 6. SESSION MONITOR
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        currentUser = session.user;
-        userEmail.textContent = currentUser.email;
-        authBox.classList.add('hidden');
-        chatBox.classList.remove('hidden');
-        userSection.classList.remove('hidden');
-
-        loadMessages();
-        listenToNewMessages();
-      } else {
-        currentUser = null;
-        authBox.classList.remove('hidden');
-        chatBox.classList.add('hidden');
-        userSection.classList.add('hidden');
-      }
-    });
-
-    // 7. FETCH MESSAGES
-    async function loadMessages() {
-      const { data, error } = await supabase
-        .from('messages')
-        .select('*')
-        .order('created_at', { ascending: true })
-        .limit(100);
-
-      if (error) {
-        messages.innerHTML = `<p class="text-xs text-red-400">Error loading messages: ${error.message}</p>`;
-        return;
-      }
-
-      messages.innerHTML = '';
-      data.forEach(addMessageToDOM);
-      scrollToBottom();
-    }
-
-    // 8. REALTIME MESSAGES
-    function listenToNewMessages() {
-      supabase
-        .channel('chat-room')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-          addMessageToDOM(payload.new);
-          scrollToBottom();
-        })
-        .subscribe();
-    }
-
-    // 9. SEND MESSAGE
-    chatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = chatInput.value.trim();
-      if (!text || !currentUser) return;
-
-      chatInput.value = '';
-
-      const { error } = await supabase.from('messages').insert([
-        { user_id: currentUser.id, user_email: currentUser.email, content: text }
-      ]);
-
-      if (error) alert('Could not send: ' + error.message);
-    });
-
-    function addMessageToDOM(msg) {
-      const isMine = currentUser && msg.user_id === currentUser.id;
-      const div = document.createElement('div');
-      div.className = `flex flex-col ${isMine ? 'items-end' : 'items-start'}`;
-
-      div.innerHTML = `
-        <span class="text-[10px] text-slate-400 mb-0.5">${isMine ? 'You' : msg.user_email}</span>
-        <div class="px-3.5 py-2 rounded-lg text-sm max-w-[80%] ${
-          isMine ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-100'
-        }">
-          ${escapeHtml(msg.content)}
-        </div>
-      `;
-
-      messages.appendChild(div);
-    }
-
-    function scrollToBottom() {
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
   </script>
 </body>
 </html>

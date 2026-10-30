@@ -991,6 +991,7 @@ button {
      <a data-i18n="settings" data-page="settings" href="#settings">
       SETTINGS
      </a>
+     <a class="hidden" data-page="dev" href="#dev" id="devNav">DEV CONSOLE</a>
     </nav>
     <div class="actions">
      <button class="pill signin" data-i18n="signIn" id="signinTop" type="button">
@@ -1131,10 +1132,11 @@ about:()=>`<section class="page"><div class="wrap">${pageHead("WHO WE ARE","A co
 "our-work":()=>`<section class="page"><div class="wrap">${pageHead("WHAT WE DO","Our work","We aim to build stronger communities through practical support, shared opportunity and sustainable initiatives.")}<div class="cards">${iconCard("▤","Education","Helping people access learning opportunities and build skills for the future.")}${iconCard("♡","Community wellbeing","Supporting initiatives that help communities thrive and care for one another.")}${iconCard("♧","Sustainability","Working toward long-term solutions shaped around local needs.")}</div></div></section>`,
 "get-involved":()=>`<section class="page"><div class="wrap">${pageHead("JOIN US","Be part of the impact","Every act of support helps build a more connected and resilient community.")}<div class="cards">${iconCard("♥","Support our work","Get in touch to learn how you can support community initiatives.")}${iconCard("♧","Volunteer","Offer your time, skills and ideas to help make local projects possible.")}${iconCard("↗","Spread the word","Share our mission with your friends, family and wider community.")}</div><div class="feature-panel"><h2>Want to get involved?</h2><p>Contact the team and we will help you find a suitable way to contribute.</p><button class="btn btn-blue" data-go="contact">Contact us</button></div></div></section>`,
 news:()=>`<section class="page"><div class="wrap">${pageHead("LATEST UPDATES","News & announcements","Updates from our community will be shared here.")}<div class="coming-soon"><div><strong>COMING SOON</strong><p>We're preparing news, announcements and stories from our community. Check back soon!</p></div></div></div></section>`,
-memories:()=>`<section class="page"><div class="wrap">${pageHead("OUR COMMUNITY","Memories","Photos and moments shared by our groups will appear here.")}<div id="memoriesGallery" class="gallery">${Array.from({length:6},(_,i)=>`<div class="gallery-item"><div class="empty-photo">♡</div><div class="caption">Community memory ${i+1}</div></div>`).join("")}</div><div id="memoryUploadArea"></div><div id="memoryStatus" class="status"></div></div></section>`,
+memories:()=>`<section class="page"><div class="wrap">${pageHead("OUR COMMUNITY","Memories","Photos and moments shared by our groups will appear here.")}<div id="memoriesGallery" class="gallery">${Array.from({length:6},(_,i)=>`<div class="gallery-item"><div class="empty-photo">♡</div><div class="caption">Community memory ${i+1}</div></div>`).join("")}</div><div id="groupConfigArea"></div><div id="memoryUploadArea"></div><div id="memoryStatus" class="status"></div></div></section>`,
 leaders:()=>`<section class="page"><div class="wrap">${pageHead("THE PEOPLE BEHIND OUR GROUPS","Meet our leaders","Meet the leaders who guide each group. The names and group assignments below are examples until you add your official leader profiles.")}<div class="cards">${leader("✦","Group leader","Group 1","Add the assigned leader's name and bio in your Supabase leaders table.")}${leader("✦","Group leader","Group 2","Add the assigned leader's name and bio in your Supabase leaders table.")}${leader("✦","Group leader","Group 3","Add the assigned leader's name and bio in your Supabase leaders table.")}</div><div class="feature-panel"><h2>Are you a group leader?</h2><p>Sign in with your leader account to upload photos for your assigned group. The account must be assigned a leader role in the database first.</p><button class="btn btn-blue" data-open-auth>Sign in</button></div></div></section>`,
 contact:()=>`<section class="page"><div class="wrap">${pageHead("STAY CONNECTED","Contact us","Have a question or want to learn more about MIDADE Mieh w Mieh? Reach out to our team.")}<div class="contact"><div><h2>Let's make an impact together.</h2><p>Replace the placeholder email with your organisation's official contact address.</p></div><a class="pill" href="mailto:ADD_YOUR_EMAIL_HERE">EMAIL OUR TEAM ↗</a></div></div></section>`,
-settings:()=>`<section class="page"><div class="wrap">${pageHead("YOUR EXPERIENCE","Settings","Choose your preferred language and appearance. These preferences are saved in this browser.")}<div class="settings-grid"><article class="card"><div class="card-icon">⚙</div><h3>Appearance & language</h3><div class="setting-row"><div><label for="languageSelect">Language</label><p>Choose the website language.</p></div><select id="languageSelect"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div><div class="setting-row"><div><label for="darkSwitch">Dark mode</label><p>Use a darker colour theme.</p></div><button id="darkSwitch" class="switch" role="switch" aria-checked="${theme==="dark"}" aria-label="Toggle dark mode"></button></div></article><article class="card"><div class="card-icon">♙</div><h3>Account</h3><p id="accountStatus">${currentUser?"Signed in as "+escapeHtml(currentUser.email||"member"):"You are browsing as a guest."}</p><div style="margin-top:15px"><button class="btn btn-blue" data-open-auth>${currentUser?"Open sign-in":"Sign in / create account"}</button></div></article></div><div class="feature-panel"><h2>Photo uploads and group permissions</h2><p>Photo uploads need a configured Supabase Storage bucket and database policies. For safety, only authenticated leaders should be allowed to upload to their own group's folder. Follow SETUP.md included in the website download.</p></div></div></section>`
+settings:()=>`<section class="page"><div class="wrap">${pageHead("YOUR EXPERIENCE","Settings","Choose your preferred language and appearance. These preferences are saved in this browser.")}<div class="settings-grid"><article class="card"><div class="card-icon">⚙</div><h3>Appearance & language</h3><div class="setting-row"><div><label for="languageSelect">Language</label><p>Choose the website language.</p></div><select id="languageSelect"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select></div><div class="setting-row"><div><label for="darkSwitch">Dark mode</label><p>Use a darker colour theme.</p></div><button id="darkSwitch" class="switch" role="switch" aria-checked="${theme==="dark"}" aria-label="Toggle dark mode"></button></div></article><article class="card"><div class="card-icon">♙</div><h3>Account</h3><p id="accountStatus">${currentUser?"Signed in as "+escapeHtml(currentUser.email||"member"):"You are browsing as a guest."}</p><div style="margin-top:15px"><button class="btn btn-blue" data-open-auth>${currentUser?"Open sign-in":"Sign in / create account"}</button></div></article></div><div class="feature-panel"><h2>Photo uploads and group permissions</h2><p>Photo uploads need a configured Supabase Storage bucket and database policies. For safety, only authenticated leaders should be allowed to upload to their own group's folder. Follow SETUP.md included in the website download.</p></div></div></section>`,
+dev:()=>`<section class="page"><div class="wrap">${pageHead("RESTRICTED AREA","Developer console","Manage community groups, assign leaders, and control account roles. Only an account granted the dev role in Supabase can use these tools.")}<div id="devGate" class="feature-panel"><h2>Checking permissions…</h2><p>Please wait while your account role is verified.</p></div><div id="devConsole" class="hidden"><div class="admin-grid"><article class="admin-panel"><h2>Groups</h2><p class="admin-note">Create groups, change their names and age ranges, or remove a group. Removing a group unassigns its users; it does not delete their accounts.</p><form class="admin-form" id="groupCreateForm"><label>Group name<input id="newGroupName" maxlength="80" required placeholder="e.g. Groupe 1"></label><label>Age range / description<input id="newGroupAge" maxlength="100" placeholder="e.g. Ages 4–7"></label><button class="admin-btn primary" type="submit">+ Add group</button></form><div id="groupAdminList" class="admin-list"></div></article><article class="admin-panel"><h2>Users & roles</h2><p class="admin-note">Promote a user to group leader and assign a group. Dev access should only be given to trusted administrators. New accounts appear after signup and the database setup is installed.</p><div id="userAdminList" class="admin-list"></div></article></div><div id="devStatus" class="admin-status" aria-live="polite">Loading management data…</div></div></div></section>`
 };
 
 function leader(icon,title,group,desc){return `<article class="card"><div class="leader-card" style="border:0;padding:0;box-shadow:none"><div class="leader-avatar">${icon}</div><div><span class="tag">${group}</span><h3 style="margin-top:8px">${title}</h3><p>${desc}</p></div></div></article>`}
@@ -1145,12 +1147,88 @@ async function loadLeaders(){const container=document.querySelector("#app .cards
 
 async function loadMemories(){if(location.hash!=="#memories")return;const gallery=$("memoriesGallery");if(!gallery)return;const {data,error}=await db.from("memories").select("id,title,image_url,group_id,created_at").order("created_at",{ascending:false}).limit(30);if(error||!data?.length)return;gallery.innerHTML=data.map(m=>`<div class="gallery-item"><img src="${escapeHtml(m.image_url)}" alt="${escapeHtml(m.title||"Community memory")}" loading="lazy"><div class="caption">${escapeHtml(m.title||"Community memory")}</div></div>`).join("")}
 
-async function loadUploadTools(){const area=$("memoryUploadArea");if(!area||!currentUser)return;const {data}=await db.from("profiles").select("role,group_id").eq("id",currentUser.id).maybeSingle();if(!data||data.role!=="leader")return;currentRole="leader";currentGroup=data.group_id;area.innerHTML=`<div class="upload-box"><h3>Upload a group memory</h3><p>Choose a JPG, PNG or WebP image (max 8 MB). The file will be stored in your group's folder.</p><label class="field"><span>Photo title</span><input id="photoTitle" maxlength="100" placeholder="Add a short title"></label><input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp"><button id="uploadPhoto" class="btn btn-blue" style="margin-top:12px">Upload photo</button><div id="uploadStatus" class="status"></div></div>`;
+async function loadUploadTools(){const area=$("memoryUploadArea"),config=$("groupConfigArea");if(!area||!currentUser)return;const {data,error}=await db.from("profiles").select("role,group_id").eq("id",currentUser.id).maybeSingle();if(error||!data||data.role!=="leader"||!data.group_id)return;currentRole="leader";currentGroup=data.group_id;
+const {data:group}=await db.from("groups").select("id,name,age_range,description").eq("id",data.group_id).maybeSingle();
+if(config&&group)config.innerHTML=`<div class="upload-box" style="margin:20px 0"><h3>Configure your group</h3><p><span class="admin-badge">${escapeHtml(group.name)}</span> · ${escapeHtml(group.age_range||"Age range not set")}</p><form id="leaderGroupForm" class="admin-form"><label>Group description<textarea id="leaderGroupDescription" maxlength="500" placeholder="Describe your group's activities">${escapeHtml(group.description||"")}</textarea></label><button class="btn btn-blue" type="submit">Save group details</button><div id="leaderGroupStatus" class="status" aria-live="polite"></div></form></div>`;
+area.innerHTML=`<div class="upload-box"><h3>Upload a group memory</h3><p>Choose a JPG, PNG or WebP image (max 8 MB). The file will be stored in your group's folder.</p><label class="field"><span>Photo title</span><input id="photoTitle" maxlength="100" placeholder="Add a short title"></label><input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp"><button id="uploadPhoto" class="btn btn-blue" style="margin-top:12px">Upload photo</button><div id="uploadStatus" class="status"></div></div>`;
 $("uploadPhoto").addEventListener("click",uploadPhoto)}
+async function saveLeaderGroup(e){e.preventDefault();const status=$("leaderGroupStatus");if(!status)return;status.textContent="Saving…";const {error}=await db.rpc("leader_update_group_description",{new_description:$("leaderGroupDescription").value.trim()});if(error){status.textContent="Could not save group details: "+error.message;status.className="status error";return}status.textContent="Group details saved.";status.className="status ok";await loadLeaders()}
 
 async function uploadPhoto(){const file=$("photoFile").files[0],status=$("uploadStatus"),button=$("uploadPhoto");if(!file){status.textContent="Choose an image first.";status.className="status error";return}if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>8*1024*1024){status.textContent="Choose a JPG, PNG or WebP image no larger than 8 MB.";status.className="status error";return}button.disabled=true;status.textContent="Uploading…";try{const {data:profile,error:pe}=await db.from("profiles").select("role,group_id").eq("id",currentUser.id).single();if(pe)throw pe;if(profile.role!=="leader"||!profile.group_id)throw new Error("Your account must be assigned the leader role and a group by an administrator.");const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=`${profile.group_id}/${currentUser.id}/${Date.now()}-${safe}`;const {error:upErr}=await db.storage.from("group-memories").upload(path,file,{upsert:false,contentType:file.type});if(upErr)throw upErr;const {data:pub}=db.storage.from("group-memories").getPublicUrl(path);const {error:dbErr}=await db.from("memories").insert({title:$("photoTitle").value.trim()||file.name,image_url:pub.publicUrl,group_id:profile.group_id,uploaded_by:currentUser.id,storage_path:path});if(dbErr)throw dbErr;status.textContent="Photo uploaded successfully.";status.className="status ok";await loadMemories()}catch(e){status.textContent=(e.message||"Upload failed.")+" If this mentions a policy or bucket, complete the setup steps in SETUP.md.";status.className="status error"}finally{button.disabled=false}}
 
-function renderPage(){const page=location.hash.slice(1)||"home";const key=pages[page]?page:"home";$("app").innerHTML=pages[key]();document.querySelectorAll(".navlinks a").forEach(a=>a.classList.toggle("active",a.dataset.page===key));if(key==="settings"){const select=$("languageSelect");if(select)select.value=lang;const sw=$("darkSwitch");if(sw){sw.setAttribute("aria-checked",String(theme==="dark"));sw.addEventListener("click",()=>{theme=theme==="dark"?"light":"dark";applyTheme();sw.setAttribute("aria-checked",String(theme==="dark"))})}}if(key==="leaders")loadLeaders();if(key==="memories"){loadMemories();loadUploadTools()}}
+async function refreshAccountRole(){
+  currentRole="member";currentGroup=null;
+  if(!currentUser){$("devNav").classList.add("hidden");return}
+  const {data,error}=await db.from("profiles").select("role,group_id").eq("id",currentUser.id).maybeSingle();
+  if(error){console.warn("Could not read profile role:",error.message);$("devNav").classList.add("hidden");return}
+  currentRole=data?.role||"member";currentGroup=data?.group_id||null;
+  $("devNav").classList.toggle("hidden",currentRole!=="dev");
+}
+function setDevStatus(message,kind=""){const el=$("devStatus");if(!el)return;el.textContent=message;el.className="admin-status"+(kind?" "+kind:"")}
+async function loadDevConsole(){
+ const gate=$("devGate"),panel=$("devConsole");if(!gate||!panel)return;
+ gate.classList.remove("hidden");panel.classList.add("hidden");
+ if(!currentUser){gate.innerHTML='<h2>Sign in required</h2><p>You must sign in with your developer account.</p><button class="btn btn-blue" data-open-auth>Sign in</button>';return}
+ await refreshAccountRole();
+ if(currentRole!=="dev"){gate.innerHTML='<h2>Access denied</h2><p>This account does not have the developer role. Ask the existing developer to grant it in the Supabase database.</p>';return}
+ gate.classList.add("hidden");panel.classList.remove("hidden");
+ await Promise.all([loadAdminGroups(),loadAdminUsers()]);
+}
+async function loadAdminGroups(){
+ const list=$("groupAdminList");if(!list)return;list.innerHTML='<p class="admin-note">Loading groups…</p>';
+ const {data,error}=await db.from("groups").select("id,name,age_range,description").order("name");
+ if(error){list.innerHTML='<p class="admin-note">Could not load groups. Run the included SQL setup in Supabase first.</p>';setDevStatus(error.message,"error");return}
+ if(!data?.length){list.innerHTML='<p class="admin-note">No groups yet. Add your first group above.</p>';return}
+ list.innerHTML=data.map(g=>`<div class="admin-row group-row" data-group-id="${escapeHtml(g.id)}"><div><strong>${escapeHtml(g.name)}</strong><div class="admin-note">${escapeHtml(g.age_range||g.description||"No age range set")}</div></div><div class="admin-actions"><button class="admin-btn" data-rename-group="${escapeHtml(g.id)}">Rename / edit</button><button class="admin-btn danger" data-delete-group="${escapeHtml(g.id)}">Remove</button></div></div>`).join("");
+}
+async function loadAdminUsers(){
+ const list=$("userAdminList");if(!list)return;list.innerHTML='<p class="admin-note">Loading users…</p>';
+ const [{data:users,error:ue},{data:groups,error:ge}]=await Promise.all([
+  db.from("profiles").select("id,email,display_name,role,group_id").order("display_name"),
+  db.from("groups").select("id,name").order("name")
+ ]);
+ if(ue||ge){list.innerHTML='<p class="admin-note">Could not load users or groups. Check that the SQL setup and RLS policies have been applied.</p>';setDevStatus((ue||ge).message,"error");return}
+ if(!users?.length){list.innerHTML='<p class="admin-note">No profiles yet. Ask users to create accounts first.</p>';return}
+ const opts=(selected)=>`<option value="">No group</option>`+groups.map(g=>`<option value="${escapeHtml(g.id)}" ${g.id===selected?"selected":""}>${escapeHtml(g.name)}</option>`).join("");
+ list.innerHTML=users.map(u=>`<div class="admin-row" data-user-id="${escapeHtml(u.id)}"><div><strong>${escapeHtml(u.display_name||"Unnamed user")}</strong><div class="admin-note">${escapeHtml(u.email||u.id)} ${u.id===currentUser.id?' · you':''}</div></div><select aria-label="Role for ${escapeHtml(u.display_name||u.email||'user')}" data-role-select="${escapeHtml(u.id)}"><option value="member" ${u.role==="member"?"selected":""}>Member</option><option value="leader" ${u.role==="leader"?"selected":""}>Group leader</option><option value="dev" ${u.role==="dev"?"selected":""}>Developer</option></select><select aria-label="Group for ${escapeHtml(u.display_name||u.email||'user')}" data-group-select="${escapeHtml(u.id)}">${opts(u.group_id)}</select><div class="admin-actions"><button class="admin-btn primary" data-save-user="${escapeHtml(u.id)}">Save</button></div></div>`).join("");
+}
+async function createGroup(e){
+ e.preventDefault();const name=$("newGroupName").value.trim(),age=$("newGroupAge").value.trim();if(!name)return;
+ const {error}=await db.from("groups").insert({name,age_range:age||null,description:age||null});
+ if(error){setDevStatus("Could not add group: "+error.message,"error");return}
+ $("groupCreateForm").reset();setDevStatus("Group created.","ok");await loadAdminGroups();await loadAdminUsers();
+}
+async function renameGroup(id){
+ const {data,error}=await db.from("groups").select("name,age_range,description").eq("id",id).single();if(error){setDevStatus(error.message,"error");return}
+ const name=prompt("New group name:",data.name);if(name===null)return;if(!name.trim()){setDevStatus("Group name cannot be empty.","error");return}
+ const age=prompt("Age range / short description:",data.age_range||data.description||"");if(age===null)return;
+ const {error:upErr}=await db.from("groups").update({name:name.trim(),age_range:age.trim()||null,description:age.trim()||null}).eq("id",id);
+ if(upErr){setDevStatus("Could not update group: "+upErr.message,"error");return}setDevStatus("Group updated.","ok");await loadAdminGroups();await loadAdminUsers();
+}
+async function deleteGroup(id){
+ const {data:group,error}=await db.from("groups").select("name").eq("id",id).single();if(error){setDevStatus(error.message,"error");return}
+ if(!confirm(`Remove “${group.name}”? Users assigned to it will become unassigned. This does not delete their accounts. Continue?`))return;
+ const {error:rpcError}=await db.rpc("dev_delete_group",{target_group_id:id});
+ if(rpcError){setDevStatus("Could not remove group: "+rpcError.message+" Make sure the SQL setup is installed.","error");return}
+ setDevStatus("Group removed and its users unassigned.","ok");await loadAdminGroups();await loadAdminUsers();
+}
+async function saveAdminUser(id){
+ const role=$(`[data-role-select="${CSS.escape(id)}"]`).value;const groupId=$(`[data-group-select="${CSS.escape(id)}"]`).value||null;
+ if(role==="leader"&&!groupId){setDevStatus("Choose a group for every group leader.","error");return}
+ if(role!=="leader"&&groupId){if(!confirm("This role is not Group leader. Clear the group assignment?"))return}
+ const {error}=await db.rpc("dev_set_user_role",{target_user_id:id,new_role:role,target_group_id:role==="leader"?groupId:null});
+ if(error){setDevStatus("Could not update user: "+error.message+" Make sure the SQL setup is installed.","error");return}
+ setDevStatus("User role and group assignment saved.","ok");await loadAdminUsers();if(id===currentUser.id)await refreshAccountRole();
+}
+
+document.addEventListener("submit",e=>{if(e.target.id==="groupCreateForm")createGroup(e);if(e.target.id==="leaderGroupForm")saveLeaderGroup(e)});
+document.addEventListener("click",e=>{
+ const rename=e.target.closest("[data-rename-group]");if(rename)renameGroup(rename.dataset.renameGroup);
+ const del=e.target.closest("[data-delete-group]");if(del)deleteGroup(del.dataset.deleteGroup);
+ const save=e.target.closest("[data-save-user]");if(save)saveAdminUser(save.dataset.saveUser);
+});
+
+function renderPage(){const page=location.hash.slice(1)||"home";const key=pages[page]?page:"home";$("app").innerHTML=pages[key]();document.querySelectorAll(".navlinks a").forEach(a=>a.classList.toggle("active",a.dataset.page===key));if(key==="settings"){const select=$("languageSelect");if(select)select.value=lang;const sw=$("darkSwitch");if(sw){sw.setAttribute("aria-checked",String(theme==="dark"));sw.addEventListener("click",()=>{theme=theme==="dark"?"light":"dark";applyTheme();sw.setAttribute("aria-checked",String(theme==="dark"))})}}if(key==="leaders")loadLeaders();if(key==="memories"){loadMemories();loadUploadTools()}if(key==="dev")loadDevConsole()}
 
 document.addEventListener("click",e=>{const nav=e.target.closest("[data-go]");if(nav){e.preventDefault();go(nav.dataset.go)}const auth=e.target.closest("[data-open-auth]");if(auth)showAuth()});
 
@@ -1175,7 +1253,7 @@ function setMode(mode){authMode=mode;$("loginTab").classList.toggle("active",mod
 $("loginTab").addEventListener("click",()=>setMode("login"));
 $("signupTab").addEventListener("click",()=>setMode("signup"));
 
-async function updateHeader(user){currentUser=user;$("signinTop").classList.toggle("hidden",!!user);$("profileBtn").classList.toggle("hidden",!user);if(user){$("profileBtn").textContent=(user.user_metadata?.display_name||user.email||"U").trim()[0].toUpperCase();$("profileEmail").textContent=user.email||"Signed in";}else{$("profileMenu").classList.add("hidden");currentRole="member"}}
+async function updateHeader(user){currentUser=user;await refreshAccountRole();$("signinTop").classList.toggle("hidden",!!user);$("profileBtn").classList.toggle("hidden",!user);if(user){$("profileBtn").textContent=(user.user_metadata?.display_name||user.email||"U").trim()[0].toUpperCase();$("profileEmail").textContent=user.email||"Signed in";}else{$("profileMenu").classList.add("hidden");currentRole="member"}}
 
 $("profileBtn").addEventListener("click",()=>$("profileMenu").classList.toggle("hidden"));
 $("profileSettings").addEventListener("click",()=>{ $("profileMenu").classList.add("hidden");go("settings")});

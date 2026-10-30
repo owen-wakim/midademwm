@@ -1,66 +1,236 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f8fc">
-<title>MIDADE mieh w mieh</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--ink:#20243b;--muted:#747b91;--paper:#f7f8fc;--white:#fff;--purple:#6558d9;--purple2:#887cf0;--orange:#ff9d62;--blue:#5b9ee8;--pink:#ed83b0;--line:#e8eaf2;--shadow:0 18px 55px #25294a12}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}.topbar{height:78px;position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.top-inner{height:100%;max-width:1180px;margin:auto;padding:0 25px;display:flex;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}.brand-mark{width:43px;height:43px;border-radius:15px;background:linear-gradient(135deg,var(--purple),#8bd8d1);display:grid;place-items:center;color:white;font-size:20px;font-weight:900;box-shadow:0 7px 18px #6558d933}.brand-name{font-size:17px;font-weight:850;letter-spacing:-.5px;white-space:nowrap}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-top:3px}.top-actions{display:flex;align-items:center;gap:12px}.signin{border:0;border-radius:999px;padding:11px 20px;background:var(--purple);color:#fff;font-weight:750;box-shadow:0 7px 16px #6558d933}.profile-btn,.menu-btn{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:50%;display:grid;place-items:center;color:var(--ink)}.profile-btn{font-weight:800;color:var(--purple);background:#f0efff;border-color:#e4e1ff}.menu-btn{border-radius:13px}.menu-btn svg,.profile-btn svg{width:20px;height:20px}.drawer-backdrop{position:fixed;inset:0;background:#17182d66;z-index:29;opacity:0;pointer-events:none;transition:.2s}.drawer-backdrop.open{opacity:1;pointer-events:auto}.drawer{position:fixed;right:0;top:0;height:100dvh;width:min(360px,88vw);background:#fff;z-index:30;transform:translateX(105%);transition:transform .25s ease;box-shadow:-20px 0 60px #17182d22;padding:24px;display:flex;flex-direction:column}.drawer.open{transform:translateX(0)}.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}.drawer-head strong{font-size:17px}.close-btn{border:0;background:#f1f2f8;width:38px;height:38px;border-radius:12px;font-size:22px;color:var(--ink)}.nav-list{display:grid;gap:7px}.nav-link{border:0;background:transparent;text-align:left;padding:14px 13px;border-radius:12px;color:#4d536a;font-weight:650;display:flex;align-items:center;gap:12px}.nav-link:hover,.nav-link.active{background:#f0efff;color:var(--purple)}.nav-link .nav-icon{width:23px;text-align:center;font-size:17px}.nav-divider{height:1px;background:var(--line);margin:14px 0}.leader-label{font-size:10px;font-weight:850;letter-spacing:1.5px;color:#a06a38;padding:0 13px 5px;text-transform:uppercase}.main{max-width:1180px;margin:auto;padding:30px 25px 70px}.hero{position:relative;overflow:hidden;min-height:430px;border-radius:30px;background:linear-gradient(112deg,#29265e 0%,#4d48a3 50%,#6c91c9 100%);padding:60px;display:flex;align-items:center;color:white;box-shadow:0 24px 60px #38327630}.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff25;border-radius:50%;width:430px;height:430px;right:-70px;top:-130px}.hero:after{width:310px;height:310px;right:40px;top:15px}.hero-content{position:relative;z-index:1;max-width:620px}.eyebrow{font-size:11px;letter-spacing:2.2px;text-transform:uppercase;font-weight:800;color:#d5d2ff}.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.02;letter-spacing:-2.6px;margin:17px 0}.hero p{font-size:16px;line-height:1.8;color:#e5e5ff;max-width:550px;margin:0}.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn-light,.btn-outline{border:0;border-radius:999px;padding:13px 20px;font-weight:800}.btn-light{background:white;color:#343078}.btn-outline{background:#ffffff18;color:white;border:1px solid #ffffff55}.hero-art{position:absolute;right:8%;bottom:34px;width:250px;height:230px;z-index:1}.art-circle{position:absolute;border-radius:50%;display:grid;place-items:center}.art-one{width:150px;height:150px;background:#ffb47c;right:20px;top:10px;font-size:62px;box-shadow:0 18px 35px #1c194933}.art-two{width:105px;height:105px;background:#82d8d0;left:0;bottom:7px;font-size:42px}.art-three{width:72px;height:72px;background:#ef9ac0;right:0;bottom:0;font-size:29px}.section{padding:58px 0 0;scroll-margin-top:95px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px}.kicker{color:var(--purple);font-size:10px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase}.section h2{font-size:clamp(27px,4vw,36px);letter-spacing:-1.2px;margin:8px 0 0}.section-intro{max-width:620px;color:var(--muted);line-height:1.75;margin:10px 0 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.info-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);min-height:190px}.card-icon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:22px;margin-bottom:17px}.lav{background:#f0efff}.peach{background:#fff0e6}.mint{background:#e6f8f5}.rose{background:#fff0f6}.sky{background:#eaf3ff}.info-card h3{font-size:17px;margin:0 0 8px}.info-card p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}.leader-card{display:flex;align-items:center;gap:23px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}.leader-avatar{flex:0 0 100px;width:100px;height:100px;border-radius:28px;background:linear-gradient(135deg,#ffe1c8,#e7e4ff);display:grid;place-items:center;font-size:38px}.leader-card h3{margin:0 0 6px;font-size:20px}.leader-card p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}.placeholder-note{margin-top:14px;padding:12px 15px;background:#fff8ed;border:1px solid #ffebd3;border-radius:12px;color:#95683b;font-size:12px;line-height:1.6}.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.memory-tile{min-height:190px;border-radius:19px;padding:18px;display:flex;align-items:end;color:white;position:relative;overflow:hidden;background:linear-gradient(145deg,#6d61c9,#a5a0e9)}.memory-tile:nth-child(2){background:linear-gradient(145deg,#dc8e9f,#f5c4b4)}.memory-tile:nth-child(3){background:linear-gradient(145deg,#4d9d9c,#9bd9c9)}.memory-tile:nth-child(4){background:linear-gradient(145deg,#d58b56,#f0c78d)}.memory-tile:nth-child(5){background:linear-gradient(145deg,#4c73a8,#a3c8e8)}.memory-tile:nth-child(6){background:linear-gradient(145deg,#aa6f9c,#e6a8ca)}.memory-tile:before{content:"✦";position:absolute;right:20px;top:10px;font-size:80px;opacity:.2}.memory-tile strong{font-size:17px;position:relative}.group-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}.group-card .age{font-size:11px;color:var(--purple);font-weight:850;letter-spacing:1px;text-transform:uppercase}.group-card h3{margin:9px 0 7px}.group-card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}.meeting-row{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;margin-bottom:12px}.date-box{width:55px;flex:0 0 55px;height:58px;border-radius:13px;background:#f0efff;color:var(--purple);display:grid;place-items:center;font-weight:850;font-size:12px}.meeting-row h3{font-size:15px;margin:2px 0 5px}.meeting-row p{font-size:13px;color:var(--muted);line-height:1.6;margin:0}.contact-panel{background:#24214f;border-radius:24px;padding:32px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px}.contact-panel p{color:#d5d3f1;line-height:1.7;margin:8px 0 0;max-width:600px;font-size:14px}.contact-link{display:inline-flex;white-space:nowrap;padding:13px 19px;border-radius:999px;background:white;color:#343078;text-decoration:none;font-size:13px;font-weight:850}.leader-section{border-top:1px dashed #e0d7c9;padding-top:35px;margin-top:58px}.leader-section .section-head{margin-bottom:18px}.leader-tag{display:inline-block;background:#fff1e3;color:#a56b35;border-radius:99px;padding:7px 11px;font-size:10px;letter-spacing:1px;font-weight:900;text-transform:uppercase}.leader-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.leader-tool{background:#fff;border:1px solid #f0e7dc;border-radius:18px;padding:22px}.leader-tool h3{font-size:16px;margin:0 0 8px}.leader-tool p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}.footer{border-top:1px solid var(--line);padding:24px 25px;color:var(--muted);font-size:12px}.footer-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.modal-backdrop{position:fixed;inset:0;background:#17182d88;z-index:50;display:grid;place-items:center;padding:18px}.auth-modal{width:min(100%,440px);background:#fff;border-radius:23px;padding:28px;box-shadow:0 25px 90px #0003;position:relative}.modal-close{position:absolute;right:18px;top:18px;border:0;background:#f1f2f8;border-radius:10px;width:34px;height:34px;font-size:20px}.auth-modal h2{font-size:25px;margin:5px 0 6px}.auth-modal .muted{font-size:13px;color:var(--muted);margin:0 0 20px}.auth-tabs{display:flex;gap:5px;background:#f2f3f8;padding:4px;border-radius:11px;margin-bottom:17px}.auth-tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:8px;color:var(--muted);font-weight:700}.auth-tabs button.active{background:#fff;color:var(--purple);box-shadow:0 2px 8px #20243b12}.field{display:block;margin:13px 0}.field span{display:block;font-size:11px;font-weight:750;color:#646b82;margin-bottom:6px}.field input{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;color:var(--ink);outline:none;background:#fff}.field input:focus{border-color:var(--purple);box-shadow:0 0 0 3px #6558d91a}.auth-submit,.google-btn{width:100%;padding:13px;border:0;border-radius:11px;font-weight:800}.auth-submit{background:var(--purple);color:#fff;margin-top:6px}.google-btn{background:#f3f4f8;color:var(--ink);margin-top:10px}.auth-msg{min-height:18px;color:#c34e68;font-size:12px;line-height:1.5;margin-top:10px}.profile-menu{position:fixed;right:75px;top:68px;z-index:25;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:9px;min-width:190px}.profile-menu .profile-email{padding:9px 10px;font-size:11px;color:var(--muted);overflow-wrap:anywhere}.profile-menu button{width:100%;text-align:left;border:0;background:transparent;padding:10px;border-radius:9px;color:var(--ink)}.profile-menu button:hover{background:#f4f3ff;color:var(--purple)}
-@media(max-width:800px){.hero{padding:42px 35px;min-height:400px}.hero-art{right:-25px;opacity:.55;transform:scale(.8)}.hero-content{max-width:560px}.grid,.leader-tools{grid-template-columns:repeat(2,1fr)}.memory-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.topbar{height:68px}.top-inner{padding:0 14px;gap:10px}.brand-mark{width:39px;height:39px}.brand-name{font-size:14px}.brand-sub{font-size:8px;letter-spacing:1.2px}.top-actions{gap:8px}.profile-btn,.menu-btn{width:39px;height:39px}.main{padding:17px 14px 50px}.hero{min-height:440px;padding:34px 25px;align-items:flex-start}.hero h1{font-size:43px;letter-spacing:-1.8px}.hero p{font-size:14px}.hero-art{right:-44px;bottom:0;transform:scale(.72);transform-origin:bottom right;opacity:.65}.section{padding-top:43px}.section-head{display:block}.grid,.leader-tools{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,1fr);gap:10px}.memory-tile{min-height:145px;padding:14px}.memory-tile strong{font-size:14px}.leader-card{align-items:flex-start;padding:18px;gap:14px}.leader-avatar{width:66px;height:66px;flex-basis:66px;border-radius:20px;font-size:27px}.contact-panel{display:block;padding:25px}.contact-link{margin-top:18px}.footer-inner{display:block}.footer-inner span{display:block;margin:5px 0}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="MIDADE Mieh w Mieh — together for a brighter tomorrow.">
+  <title>MIDADE Mieh w Mieh | Real People. Lasting Impact.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--blue:#0788e5;--blue-dark:#006bc7;--navy:#071c3e;--text:#29466b;--muted:#5e7692;--pale:#eff8fd;--line:#d7e8f4;--white:#fff;--shadow:0 18px 45px rgba(14,80,130,.09)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--navy);background:#fff}button,input{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button{cursor:pointer}.wrap{width:min(1240px,calc(100% - 48px));margin:auto}
+    .header{height:96px;position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid #eaf3f8}.nav{height:100%;display:flex;align-items:center;gap:28px}.brand{display:flex;align-items:center;text-decoration:none;margin-right:auto;min-width:0}.brand img{display:block;width:120px;height:72px;object-fit:contain;object-position:center}.navlinks{display:flex;align-items:center;gap:clamp(18px,3vw,43px)}.navlinks a{font-size:12px;font-weight:750;color:var(--navy);text-decoration:none;white-space:nowrap;position:relative;padding:13px 0}.navlinks a:hover,.navlinks a.active{color:var(--blue-dark)}.navlinks a.active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px;background:var(--blue)}.actions{display:flex;align-items:center;gap:10px;margin-left:auto}.pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:800;text-decoration:none;border:1.5px solid var(--blue);transition:transform .2s,background .2s}.pill:hover{transform:translateY(-1px)}.donate{background:#fff;color:var(--blue-dark)}.signin{background:var(--blue);color:white;border-color:var(--blue)}.menu{display:none;width:43px;height:43px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--navy);font-size:22px}
+    .hero{position:relative;overflow:hidden;min-height:500px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:25px;padding:46px 0 52px;background:radial-gradient(ellipse at 75% 44%,#f0faff 0,rgba(255,255,255,0) 42%),linear-gradient(120deg,#fff 0%,#fff 60%,#f5fbff 100%)}.hero:before,.hero:after{content:"";position:absolute;pointer-events:none;border-radius:50%;border:1px solid #c9e9fb;opacity:.65}.hero:before{width:360px;height:360px;right:-210px;bottom:-160px;box-shadow:0 0 0 22px #e9f7ff,0 0 0 44px #f3fbff}.hero:after{width:250px;height:250px;left:-200px;top:35px;box-shadow:0 0 0 20px #f3faff,0 0 0 40px #f8fcff}.hero-copy{position:relative;z-index:2;padding:12px 0}.eyebrow{font-size:16px;line-height:1.5;letter-spacing:1.3px;font-weight:800;text-transform:uppercase;color:#18a9ed}.hero h1{font-size:clamp(40px,4.3vw,64px);line-height:.99;letter-spacing:-2.3px;margin:14px 0 20px;font-weight:900}.hero h1 span{display:block;color:var(--blue-dark)}.hero p{max-width:490px;font-size:16px;line-height:1.65;color:#426487;margin:0}.hero p strong{color:var(--blue-dark)}.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.primary{background:var(--blue-dark);color:#fff;border:1px solid var(--blue-dark);border-radius:12px;padding:14px 24px;min-width:178px}.secondary{background:white;color:var(--blue-dark);border:1px solid var(--line);border-radius:12px;padding:14px 22px}.hero-art{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;min-width:0}.hero-art img{width:min(100%,570px);height:auto;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,104,180,.06))}
+    .values{background:linear-gradient(100deg,#f0f9fd,#f7fbfe);border-top:1px solid #edf7fc;border-bottom:1px solid #edf7fc}.value-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:24px 0}.value{position:relative;text-align:center;padding:0 25px}.value+.value:before{content:"";position:absolute;left:0;top:17px;bottom:8px;width:1px;background:#d2e5f2}.value-icon{width:45px;height:45px;margin:0 auto 8px;color:var(--blue-dark)}.value-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.value h3{margin:0 0 6px;color:var(--blue-dark);font-size:17px;font-weight:850}.value p{margin:0;color:#25496e;font-size:13px;line-height:1.65}
+    .impact{position:relative;overflow:hidden;padding:58px 0 65px;background:#fff}.impact-grid{display:grid;grid-template-columns:1.2fr 1fr .7fr;gap:36px;align-items:center}.kicker{color:#10a7ef;font-weight:850;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}.impact h2,.section-title{font-size:clamp(28px,3vw,38px);letter-spacing:-1.1px;line-height:1.1;margin:8px 0 14px}.impact h2 span{color:var(--blue-dark)}.impact-copy{font-size:13px;line-height:1.75;color:#4c6e91;max-width:440px;margin:0}.stats{border-left:1px solid var(--line);padding-left:34px;display:grid;gap:18px}.stat{display:flex;gap:16px;align-items:center}.stat svg{width:36px;height:36px;stroke:var(--blue);fill:none;stroke-width:1.7;flex-shrink:0}.stat strong{display:block;font-size:20px;color:var(--blue-dark);margin-bottom:3px}.stat span{display:block;font-size:12px;color:#55779a}.signature{color:var(--blue-dark);font-family:cursive;font-size:34px;font-weight:800;font-style:italic;line-height:1.1;transform:rotate(-8deg);text-align:center}.signature:after{content:"";display:block;width:105px;height:3px;background:var(--blue);border-radius:50%;margin:12px auto 0;transform:rotate(-9deg)}
+    .section{padding:72px 0;scroll-margin-top:90px}.section-heading{text-align:center;max-width:700px;margin:0 auto 30px}.section-heading p{color:var(--muted);line-height:1.7;font-size:15px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{border:1px solid var(--line);border-radius:20px;padding:25px;background:white;box-shadow:var(--shadow)}.card-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#eaf7ff;color:var(--blue-dark);font-size:23px;margin-bottom:17px}.card h3{font-size:17px;margin:0 0 8px}.card p{font-size:13px;color:var(--muted);line-height:1.75;margin:0}.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.gallery-item{min-height:175px;border-radius:17px;padding:18px;display:flex;align-items:end;background:linear-gradient(135deg,#e4f5ff,#a8dcfa);color:var(--navy);font-weight:800;position:relative;overflow:hidden}.gallery-item:nth-child(2){background:linear-gradient(135deg,#d9f2ff,#8bcdf3)}.gallery-item:nth-child(3){background:linear-gradient(135deg,#eaf8ff,#b3e6e7)}.gallery-item:nth-child(4){background:linear-gradient(135deg,#dceeff,#b2d3fa)}.gallery-item:nth-child(5){background:linear-gradient(135deg,#e6faff,#a5d9ed)}.gallery-item:nth-child(6){background:linear-gradient(135deg,#e9f3ff,#a9c9ee)}.gallery-item:before{content:"✦";position:absolute;right:17px;top:0;font-size:75px;opacity:.22}.gallery-item span{position:relative}.contact{background:#07244a;color:white;border-radius:24px;padding:35px;display:flex;align-items:center;justify-content:space-between;gap:25px}.contact p{color:#c6dff1;line-height:1.7;max-width:650px;font-size:14px}.contact .pill{background:white;color:var(--blue-dark);white-space:nowrap}.footer{padding:25px 0;color:#69829b;border-top:1px solid #e7f1f7;font-size:12px}.footer-inner{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .hidden{display:none!important}.backdrop{position:fixed;inset:0;background:#051a35a8;z-index:80;display:grid;place-items:center;padding:18px}.modal{width:min(100%,430px);background:white;border-radius:22px;padding:28px;position:relative;box-shadow:0 25px 80px #00172c44}.close{position:absolute;right:16px;top:16px;border:0;background:#eef7fc;border-radius:10px;width:35px;height:35px;font-size:21px;color:var(--navy)}.modal h2{font-size:26px;margin:8px 0}.modal-intro{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 18px}.tabs{display:flex;gap:5px;background:#edf6fb;border-radius:11px;padding:4px;margin-bottom:16px}.tabs button{flex:1;border:0;border-radius:8px;padding:10px;background:transparent;color:var(--muted);font-weight:750}.tabs button.active{background:white;color:var(--blue-dark);box-shadow:0 2px 8px #0d477014}.field{display:block;margin:12px 0}.field span{display:block;font-size:11px;font-weight:750;color:#526c87;margin-bottom:6px}.field input{width:100%;border:1px solid #d7e8f4;border-radius:10px;padding:12px;outline:none;color:var(--navy)}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #0788e51c}.submit,.google{width:100%;padding:13px;border-radius:11px;font-weight:800}.submit{border:0;background:var(--blue-dark);color:white;margin-top:6px}.google{border:1px solid var(--line);background:#fff;color:var(--navy);margin-top:10px}.message{font-size:12px;line-height:1.5;min-height:18px;color:#b52e48;margin-top:10px}.message.success{color:#16774b}.profile-menu{position:fixed;z-index:45;right:max(24px,calc((100vw - 1240px)/2));top:78px;width:220px;padding:10px;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:var(--shadow)}.profile-email{font-size:11px;color:var(--muted);padding:9px;overflow-wrap:anywhere}.profile-menu button{border:0;background:transparent;width:100%;text-align:left;padding:10px;border-radius:8px;color:var(--navy)}.profile-menu button:hover{background:var(--pale)}
+    @media(max-width:950px){.navlinks{gap:16px}.navlinks a{font-size:11px}.hero{min-height:440px}.hero-art img{width:100%}.impact-grid{grid-template-columns:1fr 1fr}.signature{display:none}.stats{padding-left:25px}.value{padding:0 14px}}
+    @media(max-width:720px){.wrap{width:min(100% - 32px,560px)}.header{height:76px}.brand img{width:93px;height:60px}.navlinks{display:none;position:absolute;left:16px;right:16px;top:70px;padding:13px;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0}.navlinks.open{display:flex}.navlinks a{padding:12px;font-size:13px}.navlinks a.active:after{display:none}.actions{gap:7px}.actions .donate{display:none}.pill{padding:11px 15px;font-size:12px}.menu{display:block}.hero{grid-template-columns:1fr;padding:35px 0 25px;gap:4px}.hero-copy{padding:0}.hero h1{font-size:clamp(39px,10vw,54px);letter-spacing:-1.8px}.hero p{font-size:14px}.hero-art{max-height:275px}.hero-art img{width:min(100%,400px);max-height:275px}.value-grid{grid-template-columns:repeat(2,1fr);gap:25px 0;padding:24px 0}.value:nth-child(3):before{display:none}.value h3{font-size:15px}.value p{font-size:12px}.impact{padding:42px 0}.impact-grid{grid-template-columns:1fr;gap:25px}.stats{border-left:0;border-top:1px solid var(--line);padding:23px 0 0;grid-template-columns:repeat(3,1fr);gap:10px}.stat{align-items:flex-start;gap:8px;flex-direction:column}.stat strong{font-size:18px}.section{padding:50px 0}.cards,.gallery{grid-template-columns:1fr 1fr}.contact{display:block;padding:26px}.contact .pill{margin-top:10px}.footer-inner{display:block}.footer-inner span{display:block;margin:6px 0}}
+    @media(max-width:420px){.brand img{width:76px}.actions .signin{padding:10px 13px}.hero-buttons>*{width:100%}.cards,.gallery{grid-template-columns:1fr}.value{padding:0 8px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}}
+  </style>
 </head>
 <body>
-<header class="topbar"><div class="top-inner">
-  <a class="brand" href="#home" aria-label="MIDADE mieh w mieh home" style="text-decoration:none;color:inherit"><div class="brand-mark">M</div><div><div class="brand-name">MIDADE mieh w mieh</div><div class="brand-sub">Together in faith & friendship</div></div></a>
-  <div class="top-actions"><button id="signinTop" class="signin" type="button">Sign in</button><button id="profileBtn" class="profile-btn hidden" type="button" aria-label="Profile">U</button><button id="menuBtn" class="menu-btn" type="button" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
-</div></header>
-<div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="drawer" class="drawer" aria-label="Site navigation"><div class="drawer-head"><strong>Explore MIDADE</strong><button id="closeDrawer" class="close-btn" aria-label="Close menu">×</button></div><nav class="nav-list">
-<button class="nav-link active" data-target="home"><span class="nav-icon">⌂</span>Home</button><button class="nav-link" data-target="leader"><span class="nav-icon">✦</span>Our leader</button><button class="nav-link" data-target="memories"><span class="nav-icon">▧</span>Our memories</button><button class="nav-link" data-target="groups"><span class="nav-icon">♧</span>Our groups</button><button class="nav-link" data-target="meetings"><span class="nav-icon">▦</span>Our meetings</button><button class="nav-link" data-target="contact"><span class="nav-icon">✉</span>Contact us</button>
-<div id="leaderNav" class="hidden"><div class="nav-divider"></div><div class="leader-label">Leaders area</div><button class="nav-link" data-target="meetingIdeas"><span class="nav-icon">✎</span>Meetings ideas</button><button class="nav-link" data-target="topicsMade"><span class="nav-icon">✓</span>Topics already made</button><button class="nav-link" data-target="upcomingEvents"><span class="nav-icon">☆</span>Upcoming events & details</button></div>
-</nav></aside>
-<div id="profileMenu" class="profile-menu hidden"><div id="profileEmail" class="profile-email"></div><button id="profileSignOut" type="button">Sign out</button></div>
-<main class="main" id="home">
-<section class="hero"><div class="hero-content"><div class="eyebrow">Mouvement International d'Apostolat Des Enfants</div><h1>Growing together.<br>Sharing our light.</h1><p>Welcome to MIDADE mieh w mieh — a community built around faith, friendship, service and meaningful moments. Discover our people, our groups, the activities we share and the events that bring us together.</p><div class="hero-cta"><button class="btn-light" data-scroll="memories">Explore our memories</button><button class="btn-outline" data-scroll="contact">Get in touch</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-circle art-one">✦</div><div class="art-circle art-two">♡</div><div class="art-circle art-three">☀</div></div></section>
-<section class="section" id="about"><div class="section-head"><div><div class="kicker">Who we are</div><h2>A community with a purpose</h2><p class="section-intro">MIDADE brings children and young people together to discover their faith, build friendships, take part in their communities and learn how small actions can make a meaningful difference.</p></div></div><div class="grid"><article class="info-card"><div class="card-icon lav">♡</div><h3>Faith & values</h3><p>We create spaces to reflect, learn and put Christian values into practice through everyday choices.</p></article><article class="info-card"><div class="card-icon peach">☀</div><h3>Friendship & belonging</h3><p>We meet, play, listen and grow together, making every member feel welcomed and included.</p></article><article class="info-card"><div class="card-icon mint">✦</div><h3>Action & service</h3><p>We encourage young people to care for others and bring positive change to the world around them.</p></article></div></section>
-<section class="section" id="leader"><div class="section-head"><div><div class="kicker">The people who guide us</div><h2>Our leader</h2><p class="section-intro">Meet the people who help guide our journey, support our teams and bring our MIDADE community together.</p></div></div><div class="leader-card"><div class="leader-avatar">✧</div><div><h3>Our MIDADE leadership</h3><p>This space is dedicated to introducing our leader and the team. Add the leader's name, a short biography, a photo and a few words about their role in the movement.</p><div class="placeholder-note">Website setup: replace this text and the ✧ placeholder with your leader's information and photo.</div></div></div></section>
-<section class="section" id="memories"><div class="section-head"><div><div class="kicker">Moments worth keeping</div><h2>Our memories</h2><p class="section-intro">Every meeting, camp, celebration and shared activity becomes part of our story. This gallery is where we can look back at the moments that made us smile and grow.</p></div></div><div class="memory-grid"><div class="memory-tile"><strong>Our gatherings</strong></div><div class="memory-tile"><strong>Special celebrations</strong></div><div class="memory-tile"><strong>Games & activities</strong></div><div class="memory-tile"><strong>Retreats & camps</strong></div><div class="memory-tile"><strong>Serving together</strong></div><div class="memory-tile"><strong>Friends & moments</strong></div></div><div class="placeholder-note">Gallery setup: replace these colourful tiles with your real photos. You can upload images to a public Supabase Storage bucket and add their public image URLs in this file.</div></section>
-<section class="section" id="groups"><div class="section-head"><div><div class="kicker">Different ages, one community</div><h2>Our groups</h2><p class="section-intro">Our groups give every age a place to belong. Through age-appropriate discussions, games, prayer and activities, members learn and grow side by side.</p></div></div><div class="grid"><article class="group-card"><div class="age">Young members</div><h3>Discover & play</h3><p>A welcoming space for younger children to discover stories, friendship, kindness and faith through creative activities.</p></article><article class="group-card"><div class="age">Growing together</div><h3>Learn & connect</h3><p>Activities and conversations that help members build confidence, understand their values and support one another.</p></article><article class="group-card"><div class="age">Youth</div><h3>Reflect & take action</h3><p>A place for deeper conversations, leadership, service projects and putting beliefs into action.</p></article></div><div class="placeholder-note">Group setup: change these descriptions to your official group names and age ranges.</div></section>
-<section class="section" id="meetings"><div class="section-head"><div><div class="kicker">Where we come together</div><h2>Our meetings</h2><p class="section-intro">Our meetings are moments to connect, explore a topic, share ideas and take part in activities. Each gathering is an opportunity to learn something and strengthen our community.</p></div></div><div class="meeting-row"><div class="date-box">01</div><div><h3>Faith, friendship & discussion</h3><p>Meetings can include a short reflection, an engaging group discussion, interactive games and a practical challenge to take into everyday life.</p></div></div><div class="meeting-row"><div class="date-box">02</div><div><h3>Activities & community projects</h3><p>From creative workshops to service activities, we learn by doing and discover how to work together.</p></div></div><div class="meeting-row"><div class="date-box">03</div><div><h3>Special gatherings</h3><p>Seasonal celebrations, camps and movement-wide events give us more chances to meet and create memories.</p></div></div><div class="placeholder-note">Meeting details: add your actual meeting schedule, location, registration information and any announcements here.</div></section>
-<section class="section" id="contact"><div class="contact-panel"><div><div class="eyebrow">Stay connected</div><h2 style="margin:8px 0 0">Contact us</h2><p>Have a question, want to learn more about MIDADE mieh w mieh, or need information about our meetings? Reach out to the team and we'll be happy to help.</p></div><a class="contact-link" id="contactEmailLink" href="mailto:ADD_YOUR_EMAIL_HERE">Email our team ↗</a></div><div class="placeholder-note">Contact setup: in the HTML, replace <b>ADD_YOUR_EMAIL_HERE</b> with your official contact email. You can also add Instagram or WhatsApp links.</div></section>
-<div id="leadersOnlyContent" class="leader-section hidden">
-<section id="meetingIdeas" class="section" style="padding-top:0"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Meetings ideas</h2><p class="section-intro">A private planning space for leaders to collect activities, games, discussion formats and meeting plans.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Icebreakers & team games</h3><p>Keep a collection of short activities that help members feel comfortable and participate.</p></article><article class="leader-tool"><h3>Discussion formats</h3><p>Save ways to start conversations, ask thoughtful questions and include every voice.</p></article><article class="leader-tool"><h3>Meeting structure</h3><p>Plan opening moments, the main topic, activities, reflection and closing.</p></article></div></section>
-<section id="topicsMade" class="section"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Topics already made</h2><p class="section-intro">Keep track of topics that have already been covered so leaders can revisit resources and avoid repeating the same session unintentionally.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Topic library</h3><p>Add the topic title, target age group, date, key message and any resources used.</p></article><article class="leader-tool"><h3>Session notes</h3><p>Record what worked well, what could be improved and ideas for a future session.</p></article><article class="leader-tool"><h3>Resources</h3><p>Keep links to presentations, printable activities, games and discussion questions.</p></article></div></section>
-<section id="upcomingEvents" class="section"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Upcoming events & details</h2><p class="section-intro">A private overview for leaders to organise upcoming events, responsibilities, schedules and important information.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Event overview</h3><p>Add the event name, date, time, location and a short description.</p></article><article class="leader-tool"><h3>Team responsibilities</h3><p>List who is coordinating each task, activity, material or communication.</p></article><article class="leader-tool"><h3>Important details</h3><p>Keep practical notes, preparation deadlines, reminders and approved announcements.</p></article></div></section>
-<div class="placeholder-note">These leader sections are currently informational layouts. Their content is not yet saved to Supabase or editable from the website. The leader visibility is controlled by the profiles table described in the setup instructions.</div>
-</div>
-</main>
-<footer class="footer"><div class="footer-inner"><span>© <span id="year"></span> MIDADE mieh w mieh</span><span>Faith • Friendship • Action • Community</span></div></footer>
-<div id="authBackdrop" class="modal-backdrop hidden"><section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><button id="modalClose" class="modal-close" aria-label="Close">×</button><div class="kicker">Welcome to our community</div><h2 id="authTitle">Sign in</h2><p class="muted">Sign in to your MIDADE account.</p><div class="auth-tabs"><button id="loginTab" class="active" type="button">Sign in</button><button id="signupTab" type="button">Create account</button></div><form id="authForm"><label id="nameField" class="field hidden"><span>Your name</span><input id="displayName" maxlength="40" autocomplete="name" placeholder="Your name"></label><label class="field"><span>Email</span><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label class="field"><span>Password</span><input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="At least 6 characters"></label><button id="submitAuth" class="auth-submit" type="submit">Sign in</button></form><button id="googleBtn" class="google-btn" type="button">Continue with Google</button><div id="authMessage" class="auth-msg" role="status"></div></section></div>
-<script>
-// Frontend-safe Supabase project URL and anon/public key. Never put secret/service_role keys here.
-const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJvZ29weXRxc3dhZWxqaW55dnZlaSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkyMTU2MTc5LCJleHAiOjIxMDc3MzIxNzl9.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ";
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=id=>document.getElementById(id);let authMode='login',currentUser=null,currentRole='member';
-function openDrawer(){ $('drawer').classList.add('open');$('drawerBackdrop').classList.add('open'); }
-function closeDrawer(){ $('drawer').classList.remove('open');$('drawerBackdrop').classList.remove('open'); }
-$('menuBtn').addEventListener('click',openDrawer);$('closeDrawer').addEventListener('click',closeDrawer);$('drawerBackdrop').addEventListener('click',closeDrawer);
-document.querySelectorAll('.nav-link').forEach(b=>b.addEventListener('click',()=>{const target=$(b.dataset.target);if(target){target.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-link').forEach(x=>x.classList.toggle('active',x===b));}closeDrawer();}));
-document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'})));
-function showAuth(){ $('authBackdrop').classList.remove('hidden');$('authMessage').textContent=''; }
-function hideAuth(){ $('authBackdrop').classList.add('hidden'); }
-$('signinTop').addEventListener('click',showAuth);$('modalClose').addEventListener('click',hideAuth);$('authBackdrop').addEventListener('click',e=>{if(e.target===$('authBackdrop'))hideAuth();});
-function setMode(mode){authMode=mode;$('loginTab').classList.toggle('active',mode==='login');$('signupTab').classList.toggle('active',mode==='signup');$('nameField').classList.toggle('hidden',mode!=='signup');$('authTitle').textContent=mode==='login'?'Sign in':'Create your account';$('submitAuth').textContent=mode==='login'?'Sign in':'Create account';$('password').autocomplete=mode==='login'?'current-password':'new-password';$('authMessage').textContent='';}
-$('loginTab').addEventListener('click',()=>setMode('login'));$('signupTab').addEventListener('click',()=>setMode('signup'));
-function nameOf(user){return user.user_metadata?.display_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'Member';}
-async function refreshRole(user){currentRole='member';if(!user)return;const {data,error}=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();if(!error&&data?.role==='leader')currentRole='leader';$('leaderNav').classList.toggle('hidden',currentRole!=='leader');$('leadersOnlyContent').classList.toggle('hidden',currentRole!=='leader');}
-function updateHeader(user){currentUser=user;$('signinTop').classList.toggle('hidden',!!user);$('profileBtn').classList.toggle('hidden',!user);if(user){$('profileBtn').textContent=(nameOf(user).trim()[0]||'U').toUpperCase();$('profileEmail').textContent=user.email||nameOf(user);}else{$('profileMenu').classList.add('hidden');$('leaderNav').classList.add('hidden');$('leadersOnlyContent').classList.add('hidden');currentRole='member';}}
-$('profileBtn').addEventListener('click',()=>$('profileMenu').classList.toggle('hidden'));document.addEventListener('click',e=>{if(!e.target.closest('#profileBtn')&&!e.target.closest('#profileMenu'))$('profileMenu').classList.add('hidden');});
-$('profileSignOut').addEventListener('click',async()=>{const {error}=await db.auth.signOut();if(error)alert(error.message);$('profileMenu').classList.add('hidden');});
-$('authForm').addEventListener('submit',async e=>{e.preventDefault();const button=$('submitAuth');button.disabled=true;$('authMessage').textContent=authMode==='login'?'Signing in…':'Creating account…';try{let result;if(authMode==='signup'){const displayName=$('displayName').value.trim();if(!displayName)throw new Error('Please enter your name.');result=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{data:{display_name:displayName},emailRedirectTo:location.origin}});if(result.error)throw result.error;if(result.data.session){hideAuth();await handleUser(result.data.user);}else{$('authMessage').textContent='Account created. Check your email to confirm, then sign in.';}}else{result=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(result.error)throw result.error;hideAuth();await handleUser(result.data.user);}}catch(err){$('authMessage').textContent=err.message||'Unable to sign in.';}finally{button.disabled=false;}});
-$('googleBtn').addEventListener('click',async()=>{ $('authMessage').textContent='Redirecting to Google…';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});if(error)$('authMessage').textContent=error.message;});
-async function handleUser(user){updateHeader(user);await refreshRole(user);}
-db.auth.onAuthStateChange((event,session)=>{setTimeout(()=>{if(session?.user)handleUser(session.user);else updateHeader(null);},0);});
-(async()=>{ $('year').textContent=new Date().getFullYear();const {data}=await db.auth.getSession();if(data.session?.user)await handleUser(data.session.user);else updateHeader(null);})();
-</script>
-</body></html>
+  <header class="header">
+    <div class="wrap nav">
+      <a class="brand" href="#home" aria-label="MIDADE home"><img src="logo.png" alt="IMAC MIDADE Mie h w Mieh logo"></a>
+      <nav class="navlinks" id="navlinks" aria-label="Main navigation">
+        <a class="active" href="#home">HOME</a><a href="#about">ABOUT</a><a href="#impact">OUR WORK</a><a href="#get-involved">GET INVOLVED</a><a href="#memories">NEWS</a><a href="#contact">CONTACT</a>
+      </nav>
+      <div class="actions">
+        <a class="pill donate" href="#get-involved" aria-label="Support our work"><span aria-hidden="true">♥</span> DONATE</a>
+        <button class="pill signin" id="signinTop" type="button">Sign in</button>
+        <button class="pill signin hidden" id="profileBtn" type="button" aria-label="Open profile">U</button>
+        <button class="menu" id="menuBtn" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+  <div id="profileMenu" class="profile-menu hidden"><div id="profileEmail" class="profile-email"></div><button id="profileSignOut" type="button">Sign out</button></div>
+
+  <main id="home">
+    <section class="hero">
+      <div class="wrap" style="display:contents"></div>
+      <div class="wrap hero-copy">
+        <div class="eyebrow">Together for a brighter tomorrow</div>
+        <h1>REAL PEOPLE.<span>LASTING IMPACT.</span></h1>
+        <p>IMAC MIDADE MIDADEN is a humanitarian initiative focused on supporting communities, empowering individuals, and building a more hopeful future — together, <strong>Mieh w Mieh.</strong></p>
+        <div class="hero-buttons"><a class="pill primary" href="#about">LEARN MORE <span aria-hidden="true">→</span></a><a class="pill secondary" href="#contact">CONTACT US</a></div>
+      </div>
+      <div class="hero-art"><img src="logo.png" alt="IMAC MIDADE Mieh w Mieh community logo"></div>
+    </section>
+
+    <section class="values" aria-label="Our values">
+      <div class="wrap value-grid">
+        <article class="value"><div class="value-icon"><svg viewBox="0 0 48 48"><circle cx="24" cy="12" r="7"/><circle cx="10" cy="19" r="5"/><circle cx="38" cy="19" r="5"/><path d="M11 39v-5c0-6 5-10 13-10s13 4 13 10v5M1 37v-4c0-4 3-7 8-7M47 37v-4c0-4-3-7-8-7"/></svg></div><h3>COMMUNITY</h3><p>We stand with communities<br>to create real, sustainable change.</p></article>
+        <article class="value"><div class="value-icon"><svg viewBox="0 0 48 48"><path d="M24 41 6 23C-1 14 12 3 21 12l3 3 3-3c9-9 22 2 15 11Z"/></svg></div><h3>EMPOWERMENT</h3><p>We invest in people, because<br>opportunity changes lives.</p></article>
+        <article class="value"><div class="value-icon"><svg viewBox="0 0 48 48"><path d="m4 19 9-12 9 4 5-2 17 9-5 10-8-3-8 7-5-3-4 1-10-7Z"/><path d="m13 8 7 8m7-5-8 8m13-6-9 10m14-7-10 11"/></svg></div><h3>SOLIDARITY</h3><p>Together, we are stronger —<br>Mieh w Mieh.</p></article>
+        <article class="value"><div class="value-icon"><svg viewBox="0 0 48 48"><path d="M24 43V24M24 30C10 30 7 21 7 12c12 0 19 5 17 18ZM24 22C24 10 32 5 43 5c0 12-7 20-19 20Z"/></svg></div><h3>SUSTAINABILITY</h3><p>We build solutions that last<br>for future generations.</p></article>
+      </div>
+    </section>
+
+    <section class="impact" id="impact">
+      <div class="wrap impact-grid">
+        <div><div class="kicker">Our impact</div><h2>CHANGING LIVES,<br><span>TOGETHER</span></h2><p class="impact-copy">From education and healthcare to food security and community development, we work hand in hand with people to create a stronger, more resilient future.</p></div>
+        <div class="stats">
+          <div class="stat"><svg viewBox="0 0 40 40"><circle cx="20" cy="9" r="5"/><circle cx="8" cy="14" r="4"/><circle cx="32" cy="14" r="4"/><path d="M8 33v-4c0-5 5-9 12-9s12 4 12 9v4M1 31v-4c0-4 3-7 7-7m31 11v-4c0-4-3-7-7-7"/></svg><div><strong>50,000+</strong><span>People Reached</span></div></div>
+          <div class="stat"><svg viewBox="0 0 40 40"><path d="M20 10C13 4 6 5 3 7v26c5-3 12-2 17 3 5-5 12-6 17-3V7c-3-2-10-3-17 3Z"/><path d="M20 10v26"/></svg><div><strong>120+</strong><span>Projects Completed</span></div></div>
+          <div class="stat"><svg viewBox="0 0 40 40"><path d="M20 35 5 20C-2 11 10 1 18 10l2 3 3-3c8-9 20 1 12 10Z"/></svg><div><strong>15+</strong><span>Communities Supported</span></div></div>
+        </div>
+        <div class="signature">Mieh<br>w Mieh</div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap"><div class="section-heading"><div class="kicker">Who we are</div><h2 class="section-title">Together, we can make a difference</h2><p>We believe lasting change starts with people. Through compassion, collaboration and community-led action, we work toward a brighter future for everyone.</p></div>
+        <div class="cards">
+          <article class="card"><div class="card-icon">♡</div><h3>People first</h3><p>We listen to communities and support the people who know their needs best.</p></article>
+          <article class="card"><div class="card-icon">✦</div><h3>Opportunity for all</h3><p>We help create opportunities that empower individuals and strengthen communities.</p></article>
+          <article class="card"><div class="card-icon">♧</div><h3>Lasting change</h3><p>We work toward practical, sustainable solutions that can benefit future generations.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="get-involved" style="background:#f5fbff">
+      <div class="wrap"><div class="section-heading"><div class="kicker">Get involved</div><h2 class="section-title">Be part of the impact</h2><p>Every act of support helps build a more connected and resilient community. Join us, share our work, or get in touch to learn how you can contribute.</p></div>
+        <div class="cards">
+          <article class="card"><div class="card-icon">♥</div><h3>Support our work</h3><p>Help us continue community initiatives and reach people who need support.</p></article>
+          <article class="card"><div class="card-icon">♧</div><h3>Volunteer with us</h3><p>Offer your time, skills and ideas to help make local projects possible.</p></article>
+          <article class="card"><div class="card-icon">↗</div><h3>Spread the word</h3><p>Share our mission with your friends, family and wider community.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="memories">
+      <div class="wrap"><div class="section-heading"><div class="kicker">Stories from our community</div><h2 class="section-title">Our work, our memories</h2><p>A look at the people, projects and shared moments that make our community stronger.</p></div>
+        <div class="gallery"><div class="gallery-item"><span>Community gatherings</span></div><div class="gallery-item"><span>Learning together</span></div><div class="gallery-item"><span>Local initiatives</span></div><div class="gallery-item"><span>People helping people</span></div><div class="gallery-item"><span>Building connections</span></div><div class="gallery-item"><span>Growing a brighter future</span></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="wrap"><div class="contact"><div><div class="kicker">Stay connected</div><h2 class="section-title" style="color:white;margin-top:9px">Let's make an impact together.</h2><p>Have a question or want to learn more about MIDADE Mieh w Mieh? Reach out to our team.</p></div><a class="pill" id="contactLink" href="mailto:ADD_YOUR_EMAIL_HERE">CONTACT US ↗</a></div></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap footer-inner"><span>© <span id="year"></span> MIDADE Mieh w Mieh</span><span>Community · Empowerment · Solidarity · Sustainability</span></div></footer>
+
+  <div id="authBackdrop" class="backdrop hidden"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><button id="modalClose" class="close" type="button" aria-label="Close sign in">×</button><div class="kicker">Welcome to our community</div><h2 id="authTitle">Sign in</h2><p class="modal-intro">Access your MIDADE community account.</p><div class="tabs"><button id="loginTab" class="active" type="button">Sign in</button><button id="signupTab" type="button">Create account</button></div><form id="authForm"><label id="nameField" class="field hidden"><span>Your name</span><input id="displayName" maxlength="40" autocomplete="name" placeholder="Your name"></label><label class="field"><span>Email address</span><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label class="field"><span>Password</span><input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="At least 6 characters"></label><button id="submitAuth" class="submit" type="submit">Sign in</button></form><button id="googleBtn" class="google" type="button">Continue with Google</button><div id="authMessage" class="message" role="status" aria-live="polite"></div></section></div>
+
+  <script>
+    // Supabase project URL and anon/public key from the supplied project configuration.
+    // Never expose a service_role/secret key in browser code.
+    const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJvZ29weXRxc3dhZWxqaW55dnZlaSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkyMTU2MTc5LCJleHAiOjIxMDc3MzIxNzl9.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ";
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    const $ = id => document.getElementById(id);
+    let authMode = "login", currentUser = null;
+
+    $("year").textContent = new Date().getFullYear();
+    $("menuBtn").addEventListener("click", () => {
+      const open = $("navlinks").classList.toggle("open");
+      $("menuBtn").setAttribute("aria-expanded", String(open));
+      $("menuBtn").textContent = open ? "×" : "☰";
+    });
+    document.querySelectorAll(".navlinks a").forEach(a => a.addEventListener("click", () => {
+      document.querySelectorAll(".navlinks a").forEach(x => x.classList.toggle("active", x === a));
+      $("navlinks").classList.remove("open");
+      $("menuBtn").setAttribute("aria-expanded", "false");
+      $("menuBtn").textContent = "☰";
+    }));
+
+    function showAuth() { $("authBackdrop").classList.remove("hidden"); $("authMessage").textContent = ""; $("email").focus(); }
+    function hideAuth() { $("authBackdrop").classList.add("hidden"); }
+    $("signinTop").addEventListener("click", showAuth);
+    $("modalClose").addEventListener("click", hideAuth);
+    $("authBackdrop").addEventListener("click", e => { if (e.target === $("authBackdrop")) hideAuth(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") hideAuth(); });
+
+    function setMode(mode) {
+      authMode = mode;
+      $("loginTab").classList.toggle("active", mode === "login");
+      $("signupTab").classList.toggle("active", mode === "signup");
+      $("nameField").classList.toggle("hidden", mode !== "signup");
+      $("authTitle").textContent = mode === "login" ? "Sign in" : "Create your account";
+      $("submitAuth").textContent = mode === "login" ? "Sign in" : "Create account";
+      $("password").autocomplete = mode === "login" ? "current-password" : "new-password";
+      $("authMessage").textContent = "";
+    }
+    $("loginTab").addEventListener("click", () => setMode("login"));
+    $("signupTab").addEventListener("click", () => setMode("signup"));
+
+    function nameOf(user) {
+      return user.user_metadata?.display_name || user.user_metadata?.full_name ||
+        user.user_metadata?.name || user.email?.split("@")[0] || "Member";
+    }
+    async function updateHeader(user) {
+      currentUser = user;
+      $("signinTop").classList.toggle("hidden", !!user);
+      $("profileBtn").classList.toggle("hidden", !user);
+      if (user) {
+        $("profileBtn").textContent = (nameOf(user).trim()[0] || "U").toUpperCase();
+        $("profileEmail").textContent = user.email || nameOf(user);
+      } else {
+        $("profileMenu").classList.add("hidden");
+      }
+    }
+    $("profileBtn").addEventListener("click", () => $("profileMenu").classList.toggle("hidden"));
+    document.addEventListener("click", e => {
+      if (!e.target.closest("#profileBtn") && !e.target.closest("#profileMenu")) $("profileMenu").classList.add("hidden");
+    });
+    $("profileSignOut").addEventListener("click", async () => {
+      const { error } = await db.auth.signOut();
+      if (error) { $("authMessage").textContent = error.message; return; }
+      $("profileMenu").classList.add("hidden");
+      await updateHeader(null);
+    });
+
+    $("authForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const button = $("submitAuth");
+      button.disabled = true;
+      $("authMessage").classList.remove("success");
+      $("authMessage").textContent = authMode === "login" ? "Signing in…" : "Creating account…";
+      try {
+        let result;
+        const email = $("email").value.trim();
+        const password = $("password").value;
+        if (authMode === "signup") {
+          const displayName = $("displayName").value.trim();
+          if (!displayName) throw new Error("Please enter your name.");
+          result = await db.auth.signUp({
+            email, password,
+            options: { data: { display_name: displayName }, emailRedirectTo: location.origin }
+          });
+          if (result.error) throw result.error;
+          if (result.data.session) {
+            hideAuth();
+            await updateHeader(result.data.user);
+          } else {
+            $("authMessage").classList.add("success");
+            $("authMessage").textContent = "Account created. Check your email to confirm your address, then sign in.";
+          }
+        } else {
+          result = await db.auth.signInWithPassword({ email, password });
+          if (result.error) throw result.error;
+          hideAuth();
+          await updateHeader(result.data.user);
+        }
+      } catch (err) {
+        $("authMessage").textContent = err.message || "Unable to complete authentication.";
+      } finally { button.disabled = false; }
+    });
+
+    $("googleBtn").addEventListener("click", async () => {
+      $("authMessage").textContent = "Redirecting to Google…";
+      const { error } = await db.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: location.origin }
+      });
+      if (error) $("authMessage").textContent = error.message;
+    });
+
+    db.auth.onAuthStateChange((event, session) => {
+      setTimeout(() => updateHeader(session?.user || null), 0);
+    });
+    (async () => {
+      const { data, error } = await db.auth.getSession();
+      if (error) console.error("Could not restore Supabase session:", error.message);
+      await updateHeader(data?.session?.user || null);
+    })();
+  </script>
+</body>
+</html>

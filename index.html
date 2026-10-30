@@ -1,356 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#10131f" />
-  <title>MIDADE Chat</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0c1020;
-      --panel: rgba(22, 28, 48, .88);
-      --panel2: #1b2340;
-      --line: rgba(255,255,255,.10);
-      --text: #f4f6ff;
-      --muted: #a4acc4;
-      --accent: #8b7cff;
-      --accent2: #5bd6c3;
-      --danger: #ff7d91;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-      background: radial-gradient(ellipse at 15% 0%, #292653 0, transparent 42%),
-                  radial-gradient(ellipse at 100% 100%, #123b48 0, transparent 38%), var(--bg);
-    }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    .shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-    .auth-card {
-      width: min(100%, 440px); padding: 34px; border: 1px solid var(--line);
-      border-radius: 24px; background: var(--panel); box-shadow: 0 24px 80px #0007;
-      backdrop-filter: blur(18px);
-    }
-    .brand { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
-    .logo {
-      width: 44px; height:44px; display:grid; place-items:center; border-radius:14px;
-      background: linear-gradient(135deg,var(--accent),var(--accent2)); color:#10131f;
-      font-weight:900; font-size:20px;
-    }
-    h1 { font-size:25px; margin:0 0 6px; letter-spacing:-.7px; }
-    .sub { color:var(--muted); margin:0; font-size:14px; }
-    .tabs { display:flex; padding:4px; border-radius:12px; background:#0d1222; margin:26px 0 20px; }
-    .tabs button { flex:1; border:0; border-radius:9px; padding:10px; color:var(--muted); background:transparent; }
-    .tabs button.active { color:var(--text); background:var(--panel2); }
-    .field { display:block; margin:14px 0; }
-    .field span { display:block; font-size:12px; color:var(--muted); margin-bottom:7px; }
-    .field input {
-      width:100%; border:1px solid var(--line); border-radius:11px; padding:13px 14px;
-      color:var(--text); background:#0d1222; outline:none;
-    }
-    .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px #8b7cff22; }
-    .primary, .google {
-      width:100%; border:0; border-radius:11px; padding:13px 15px; font-weight:700;
-      transition:transform .15s, opacity .15s;
-    }
-    .primary { color:#10131f; background:linear-gradient(110deg,#a99cff,#62dfce); margin-top:8px; }
-    .google { color:var(--text); background:#202943; border:1px solid var(--line); margin-top:12px; }
-    button:hover { opacity:.92; } button:active { transform:scale(.99); }
-    .divider { display:flex; align-items:center; gap:12px; color:#7f89a6; font-size:11px; margin:18px 0 4px; }
-    .divider:before,.divider:after { content:""; height:1px; flex:1; background:var(--line); }
-    .message { min-height:20px; color:var(--danger); font-size:13px; margin-top:12px; line-height:1.4; }
-    .hint { color:var(--muted); font-size:12px; line-height:1.5; margin:16px 0 0; }
-    .hidden { display:none !important; }
-
-    .chat-shell { min-height:100vh; padding:22px; display:grid; place-items:center; }
-    .chat {
-      width:min(100%, 980px); height:min(850px, calc(100vh - 44px)); min-height:520px;
-      display:flex; flex-direction:column; overflow:hidden; border:1px solid var(--line);
-      border-radius:22px; background:var(--panel); box-shadow:0 24px 80px #0007; backdrop-filter:blur(18px);
-    }
-    .chat-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:19px 22px; border-bottom:1px solid var(--line); }
-    .chat-title { display:flex; align-items:center; gap:12px; min-width:0; }
-    .chat-title h1 { font-size:18px; margin:0; }
-    .online { font-size:12px; color:var(--accent2); margin-top:4px; }
-    .user-area { display:flex; align-items:center; gap:12px; }
-    .user-name { color:var(--muted); font-size:12px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .logout { border:1px solid var(--line); border-radius:9px; padding:8px 11px; background:#202943; color:var(--text); font-size:12px; }
-    .messages { flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; gap:13px; }
-    .empty { margin:auto; text-align:center; color:var(--muted); font-size:14px; }
-    .bubble { max-width:min(75%, 620px); align-self:flex-start; }
-    .bubble.mine { align-self:flex-end; }
-    .meta { display:flex; gap:8px; align-items:center; margin:0 8px 5px; color:var(--muted); font-size:11px; }
-    .bubble.mine .meta { justify-content:flex-end; }
-    .content { padding:11px 14px; border-radius:15px 15px 15px 4px; background:#252d4b; line-height:1.45; font-size:14px; overflow-wrap:anywhere; white-space:pre-wrap; }
-    .mine .content { color:#10131f; background:linear-gradient(120deg,#b6aaff,#78e5d5); border-radius:15px 15px 4px 15px; }
-    .composer { display:flex; gap:10px; padding:16px; border-top:1px solid var(--line); }
-    .composer input { flex:1; min-width:0; border:1px solid var(--line); border-radius:12px; padding:13px 15px; color:var(--text); background:#0d1222; outline:none; }
-    .composer input:focus { border-color:var(--accent); }
-    .send { border:0; border-radius:12px; padding:0 22px; font-weight:800; color:#10131f; background:linear-gradient(110deg,#a99cff,#62dfce); }
-    .chat-status { min-height:17px; padding:0 18px 8px; color:var(--muted); font-size:11px; }
-    @media(max-width:600px) {
-      .shell { padding:14px; } .auth-card { padding:25px 21px; }
-      .chat-shell { padding:0; } .chat { width:100%; height:100dvh; min-height:0; border-radius:0; border:0; }
-      .chat-head { padding:15px; } .messages { padding:16px 12px; }
-      .bubble { max-width:88%; } .user-name { max-width:90px; }
-      .composer { padding:12px; } .send { padding:0 16px; }
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f8fc">
+<title>MIDADE mieh w mieh</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#20243b;--muted:#747b91;--paper:#f7f8fc;--white:#fff;--purple:#6558d9;--purple2:#887cf0;--orange:#ff9d62;--blue:#5b9ee8;--pink:#ed83b0;--line:#e8eaf2;--shadow:0 18px 55px #25294a12}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}.topbar{height:78px;position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.top-inner{height:100%;max-width:1180px;margin:auto;padding:0 25px;display:flex;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}.brand-mark{width:43px;height:43px;border-radius:15px;background:linear-gradient(135deg,var(--purple),#8bd8d1);display:grid;place-items:center;color:white;font-size:20px;font-weight:900;box-shadow:0 7px 18px #6558d933}.brand-name{font-size:17px;font-weight:850;letter-spacing:-.5px;white-space:nowrap}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-top:3px}.top-actions{display:flex;align-items:center;gap:12px}.signin{border:0;border-radius:999px;padding:11px 20px;background:var(--purple);color:#fff;font-weight:750;box-shadow:0 7px 16px #6558d933}.profile-btn,.menu-btn{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:50%;display:grid;place-items:center;color:var(--ink)}.profile-btn{font-weight:800;color:var(--purple);background:#f0efff;border-color:#e4e1ff}.menu-btn{border-radius:13px}.menu-btn svg,.profile-btn svg{width:20px;height:20px}.drawer-backdrop{position:fixed;inset:0;background:#17182d66;z-index:29;opacity:0;pointer-events:none;transition:.2s}.drawer-backdrop.open{opacity:1;pointer-events:auto}.drawer{position:fixed;right:0;top:0;height:100dvh;width:min(360px,88vw);background:#fff;z-index:30;transform:translateX(105%);transition:transform .25s ease;box-shadow:-20px 0 60px #17182d22;padding:24px;display:flex;flex-direction:column}.drawer.open{transform:translateX(0)}.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}.drawer-head strong{font-size:17px}.close-btn{border:0;background:#f1f2f8;width:38px;height:38px;border-radius:12px;font-size:22px;color:var(--ink)}.nav-list{display:grid;gap:7px}.nav-link{border:0;background:transparent;text-align:left;padding:14px 13px;border-radius:12px;color:#4d536a;font-weight:650;display:flex;align-items:center;gap:12px}.nav-link:hover,.nav-link.active{background:#f0efff;color:var(--purple)}.nav-link .nav-icon{width:23px;text-align:center;font-size:17px}.nav-divider{height:1px;background:var(--line);margin:14px 0}.leader-label{font-size:10px;font-weight:850;letter-spacing:1.5px;color:#a06a38;padding:0 13px 5px;text-transform:uppercase}.main{max-width:1180px;margin:auto;padding:30px 25px 70px}.hero{position:relative;overflow:hidden;min-height:430px;border-radius:30px;background:linear-gradient(112deg,#29265e 0%,#4d48a3 50%,#6c91c9 100%);padding:60px;display:flex;align-items:center;color:white;box-shadow:0 24px 60px #38327630}.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff25;border-radius:50%;width:430px;height:430px;right:-70px;top:-130px}.hero:after{width:310px;height:310px;right:40px;top:15px}.hero-content{position:relative;z-index:1;max-width:620px}.eyebrow{font-size:11px;letter-spacing:2.2px;text-transform:uppercase;font-weight:800;color:#d5d2ff}.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.02;letter-spacing:-2.6px;margin:17px 0}.hero p{font-size:16px;line-height:1.8;color:#e5e5ff;max-width:550px;margin:0}.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn-light,.btn-outline{border:0;border-radius:999px;padding:13px 20px;font-weight:800}.btn-light{background:white;color:#343078}.btn-outline{background:#ffffff18;color:white;border:1px solid #ffffff55}.hero-art{position:absolute;right:8%;bottom:34px;width:250px;height:230px;z-index:1}.art-circle{position:absolute;border-radius:50%;display:grid;place-items:center}.art-one{width:150px;height:150px;background:#ffb47c;right:20px;top:10px;font-size:62px;box-shadow:0 18px 35px #1c194933}.art-two{width:105px;height:105px;background:#82d8d0;left:0;bottom:7px;font-size:42px}.art-three{width:72px;height:72px;background:#ef9ac0;right:0;bottom:0;font-size:29px}.section{padding:58px 0 0;scroll-margin-top:95px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px}.kicker{color:var(--purple);font-size:10px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase}.section h2{font-size:clamp(27px,4vw,36px);letter-spacing:-1.2px;margin:8px 0 0}.section-intro{max-width:620px;color:var(--muted);line-height:1.75;margin:10px 0 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.info-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);min-height:190px}.card-icon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:22px;margin-bottom:17px}.lav{background:#f0efff}.peach{background:#fff0e6}.mint{background:#e6f8f5}.rose{background:#fff0f6}.sky{background:#eaf3ff}.info-card h3{font-size:17px;margin:0 0 8px}.info-card p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}.leader-card{display:flex;align-items:center;gap:23px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}.leader-avatar{flex:0 0 100px;width:100px;height:100px;border-radius:28px;background:linear-gradient(135deg,#ffe1c8,#e7e4ff);display:grid;place-items:center;font-size:38px}.leader-card h3{margin:0 0 6px;font-size:20px}.leader-card p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}.placeholder-note{margin-top:14px;padding:12px 15px;background:#fff8ed;border:1px solid #ffebd3;border-radius:12px;color:#95683b;font-size:12px;line-height:1.6}.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.memory-tile{min-height:190px;border-radius:19px;padding:18px;display:flex;align-items:end;color:white;position:relative;overflow:hidden;background:linear-gradient(145deg,#6d61c9,#a5a0e9)}.memory-tile:nth-child(2){background:linear-gradient(145deg,#dc8e9f,#f5c4b4)}.memory-tile:nth-child(3){background:linear-gradient(145deg,#4d9d9c,#9bd9c9)}.memory-tile:nth-child(4){background:linear-gradient(145deg,#d58b56,#f0c78d)}.memory-tile:nth-child(5){background:linear-gradient(145deg,#4c73a8,#a3c8e8)}.memory-tile:nth-child(6){background:linear-gradient(145deg,#aa6f9c,#e6a8ca)}.memory-tile:before{content:"✦";position:absolute;right:20px;top:10px;font-size:80px;opacity:.2}.memory-tile strong{font-size:17px;position:relative}.group-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}.group-card .age{font-size:11px;color:var(--purple);font-weight:850;letter-spacing:1px;text-transform:uppercase}.group-card h3{margin:9px 0 7px}.group-card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}.meeting-row{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;margin-bottom:12px}.date-box{width:55px;flex:0 0 55px;height:58px;border-radius:13px;background:#f0efff;color:var(--purple);display:grid;place-items:center;font-weight:850;font-size:12px}.meeting-row h3{font-size:15px;margin:2px 0 5px}.meeting-row p{font-size:13px;color:var(--muted);line-height:1.6;margin:0}.contact-panel{background:#24214f;border-radius:24px;padding:32px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px}.contact-panel p{color:#d5d3f1;line-height:1.7;margin:8px 0 0;max-width:600px;font-size:14px}.contact-link{display:inline-flex;white-space:nowrap;padding:13px 19px;border-radius:999px;background:white;color:#343078;text-decoration:none;font-size:13px;font-weight:850}.leader-section{border-top:1px dashed #e0d7c9;padding-top:35px;margin-top:58px}.leader-section .section-head{margin-bottom:18px}.leader-tag{display:inline-block;background:#fff1e3;color:#a56b35;border-radius:99px;padding:7px 11px;font-size:10px;letter-spacing:1px;font-weight:900;text-transform:uppercase}.leader-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.leader-tool{background:#fff;border:1px solid #f0e7dc;border-radius:18px;padding:22px}.leader-tool h3{font-size:16px;margin:0 0 8px}.leader-tool p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}.footer{border-top:1px solid var(--line);padding:24px 25px;color:var(--muted);font-size:12px}.footer-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.modal-backdrop{position:fixed;inset:0;background:#17182d88;z-index:50;display:grid;place-items:center;padding:18px}.auth-modal{width:min(100%,440px);background:#fff;border-radius:23px;padding:28px;box-shadow:0 25px 90px #0003;position:relative}.modal-close{position:absolute;right:18px;top:18px;border:0;background:#f1f2f8;border-radius:10px;width:34px;height:34px;font-size:20px}.auth-modal h2{font-size:25px;margin:5px 0 6px}.auth-modal .muted{font-size:13px;color:var(--muted);margin:0 0 20px}.auth-tabs{display:flex;gap:5px;background:#f2f3f8;padding:4px;border-radius:11px;margin-bottom:17px}.auth-tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:8px;color:var(--muted);font-weight:700}.auth-tabs button.active{background:#fff;color:var(--purple);box-shadow:0 2px 8px #20243b12}.field{display:block;margin:13px 0}.field span{display:block;font-size:11px;font-weight:750;color:#646b82;margin-bottom:6px}.field input{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;color:var(--ink);outline:none;background:#fff}.field input:focus{border-color:var(--purple);box-shadow:0 0 0 3px #6558d91a}.auth-submit,.google-btn{width:100%;padding:13px;border:0;border-radius:11px;font-weight:800}.auth-submit{background:var(--purple);color:#fff;margin-top:6px}.google-btn{background:#f3f4f8;color:var(--ink);margin-top:10px}.auth-msg{min-height:18px;color:#c34e68;font-size:12px;line-height:1.5;margin-top:10px}.profile-menu{position:fixed;right:75px;top:68px;z-index:25;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:9px;min-width:190px}.profile-menu .profile-email{padding:9px 10px;font-size:11px;color:var(--muted);overflow-wrap:anywhere}.profile-menu button{width:100%;text-align:left;border:0;background:transparent;padding:10px;border-radius:9px;color:var(--ink)}.profile-menu button:hover{background:#f4f3ff;color:var(--purple)}
+@media(max-width:800px){.hero{padding:42px 35px;min-height:400px}.hero-art{right:-25px;opacity:.55;transform:scale(.8)}.hero-content{max-width:560px}.grid,.leader-tools{grid-template-columns:repeat(2,1fr)}.memory-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.topbar{height:68px}.top-inner{padding:0 14px;gap:10px}.brand-mark{width:39px;height:39px}.brand-name{font-size:14px}.brand-sub{font-size:8px;letter-spacing:1.2px}.top-actions{gap:8px}.profile-btn,.menu-btn{width:39px;height:39px}.main{padding:17px 14px 50px}.hero{min-height:440px;padding:34px 25px;align-items:flex-start}.hero h1{font-size:43px;letter-spacing:-1.8px}.hero p{font-size:14px}.hero-art{right:-44px;bottom:0;transform:scale(.72);transform-origin:bottom right;opacity:.65}.section{padding-top:43px}.section-head{display:block}.grid,.leader-tools{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,1fr);gap:10px}.memory-tile{min-height:145px;padding:14px}.memory-tile strong{font-size:14px}.leader-card{align-items:flex-start;padding:18px;gap:14px}.leader-avatar{width:66px;height:66px;flex-basis:66px;border-radius:20px;font-size:27px}.contact-panel{display:block;padding:25px}.contact-link{margin-top:18px}.footer-inner{display:block}.footer-inner span{display:block;margin:5px 0}}
+</style>
 </head>
 <body>
-  <main id="authView" class="shell">
-    <section class="auth-card">
-      <div class="brand">
-        <div class="logo">M</div>
-        <div><h1>MIDADE Chat</h1><p class="sub">A place for everyone to connect.</p></div>
-      </div>
-      <div class="tabs">
-        <button id="loginTab" class="active" type="button">Sign in</button>
-        <button id="signupTab" type="button">Create account</button>
-      </div>
-      <form id="authForm">
-        <label id="nameField" class="field hidden"><span>Display name</span><input id="displayName" maxlength="40" autocomplete="name" placeholder="Your name"></label>
-        <label class="field"><span>Email</span><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
-        <label class="field"><span>Password</span><input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="At least 6 characters"></label>
-        <button id="submitAuth" class="primary" type="submit">Sign in</button>
-      </form>
-      <div class="divider">OR</div>
-      <button id="googleBtn" class="google" type="button">Continue with Google</button>
-      <div id="authMessage" class="message" role="status"></div>
-      <p class="hint">By continuing, you agree to use the public chat respectfully. Do not share passwords, private contact details, or sensitive personal information.</p>
-    </section>
-  </main>
-
-  <main id="chatView" class="chat-shell hidden">
-    <section class="chat">
-      <header class="chat-head">
-        <div class="chat-title">
-          <div class="logo">M</div>
-          <div><h1>Public Chat</h1><div class="online">● Community room</div></div>
-        </div>
-        <div class="user-area"><span id="currentUser" class="user-name"></span><button id="logoutBtn" class="logout" type="button">Sign out</button></div>
-      </header>
-      <div id="messages" class="messages"><div class="empty">Loading messages…</div></div>
-      <div id="chatStatus" class="chat-status" role="status"></div>
-      <form id="messageForm" class="composer">
-        <input id="messageInput" maxlength="2000" autocomplete="off" placeholder="Write a message…" aria-label="Write a message" required>
-        <button id="sendBtn" class="send" type="submit">Send</button>
-      </form>
-    </section>
-  </main>
-
-  <script>
-    // These are frontend-safe values: Supabase project URL + anon/public key only.
-    const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nb3B5dHFzd2FlbGppbnl2dmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTYxNzksImV4cCI6MjEwNzczMjE3OX0.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ";
-
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-    });
-
-    const $ = (id) => document.getElementById(id);
-    const authView = $("authView"), chatView = $("chatView");
-    let mode = "login";
-    let activeUser = null;
-    let realtimeChannel = null;
-    let renderedIds = new Set();
-
-    function showMessage(text, isChat = false) {
-      (isChat ? $("chatStatus") : $("authMessage")).textContent = text || "";
-    }
-    function setMode(next) {
-      mode = next;
-      $("loginTab").classList.toggle("active", mode === "login");
-      $("signupTab").classList.toggle("active", mode === "signup");
-      $("nameField").classList.toggle("hidden", mode !== "signup");
-      $("submitAuth").textContent = mode === "login" ? "Sign in" : "Create account";
-      $("password").autocomplete = mode === "login" ? "current-password" : "new-password";
-      showMessage("");
-    }
-    $("loginTab").addEventListener("click", () => setMode("login"));
-    $("signupTab").addEventListener("click", () => setMode("signup"));
-
-    function displayName(user) {
-      return user.user_metadata?.display_name ||
-             user.user_metadata?.full_name ||
-             user.user_metadata?.name ||
-             user.email?.split("@")[0] ||
-             "Member";
-    }
-    function showAuth() {
-      authView.classList.remove("hidden");
-      chatView.classList.add("hidden");
-      activeUser = null;
-      if (realtimeChannel) {
-        db.removeChannel(realtimeChannel);
-        realtimeChannel = null;
-      }
-    }
-    async function showChat(user) {
-      if (!user) return;
-      activeUser = user;
-      authView.classList.add("hidden");
-      chatView.classList.remove("hidden");
-      $("currentUser").textContent = displayName(user);
-      await loadMessages();
-      subscribeToMessages();
-    }
-
-    $("authForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = $("email").value.trim();
-      const password = $("password").value;
-      const button = $("submitAuth");
-      button.disabled = true;
-      showMessage(mode === "login" ? "Signing in…" : "Creating your account…");
-      try {
-        let result;
-        if (mode === "signup") {
-          const name = $("displayName").value.trim();
-          if (!name) throw new Error("Please enter a display name.");
-          result = await db.auth.signUp({
-            email, password,
-            options: {
-              data: { display_name: name },
-              emailRedirectTo: window.location.origin
-            }
-          });
-          if (result.error) throw result.error;
-          if (result.data.session) {
-            await showChat(result.data.user);
-          } else {
-            showMessage("Account created. Check your email to confirm your account, then sign in.");
-          }
-        } else {
-          result = await db.auth.signInWithPassword({ email, password });
-          if (result.error) throw result.error;
-          await showChat(result.data.user);
-        }
-      } catch (error) {
-        showMessage(error.message || "Something went wrong.");
-      } finally {
-        button.disabled = false;
-      }
-    });
-
-    $("googleBtn").addEventListener("click", async () => {
-      showMessage("Redirecting to Google…");
-      const { error } = await db.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: window.location.origin }
-      });
-      if (error) showMessage(error.message);
-    });
-
-    $("logoutBtn").addEventListener("click", async () => {
-      $("logoutBtn").disabled = true;
-      const { error } = await db.auth.signOut();
-      if (error) showMessage(error.message, true);
-      else showAuth();
-      $("logoutBtn").disabled = false;
-    });
-
-    function formatTime(value) {
-      return new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" }).format(new Date(value));
-    }
-    function addMessage(row) {
-      if (!row || renderedIds.has(row.id)) return;
-      renderedIds.add(row.id);
-      const container = $("messages");
-      const empty = container.querySelector(".empty");
-      if (empty) empty.remove();
-
-      const mine = row.user_id === activeUser?.id;
-      const bubble = document.createElement("article");
-      bubble.className = "bubble" + (mine ? " mine" : "");
-      const meta = document.createElement("div");
-      meta.className = "meta";
-      const name = document.createElement("span");
-      name.textContent = mine ? "You" : (row.username || "Member");
-      const time = document.createElement("time");
-      time.textContent = formatTime(row.created_at);
-      meta.append(name, time);
-      const content = document.createElement("div");
-      content.className = "content";
-      content.textContent = row.content;
-      bubble.append(meta, content);
-      container.appendChild(bubble);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    async function loadMessages() {
-      renderedIds.clear();
-      $("messages").replaceChildren();
-      const { data, error } = await db.from("messages")
-        .select("id,user_id,username,content,created_at")
-        .order("created_at", { ascending: true })
-        .limit(200);
-      if (error) {
-        $("messages").innerHTML = '<div class="empty">Could not load chat. Check your Supabase table and RLS setup.</div>';
-        showMessage(error.message, true);
-        return;
-      }
-      if (!data.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = "No messages yet. Start the conversation!";
-        $("messages").appendChild(empty);
-      } else {
-        data.forEach(addMessage);
-      }
-    }
-
-    function subscribeToMessages() {
-      if (realtimeChannel) db.removeChannel(realtimeChannel);
-      realtimeChannel = db.channel("public-chat-messages")
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" },
-          (payload) => addMessage(payload.new))
-        .subscribe((status) => {
-          if (status === "SUBSCRIBED") showMessage("Live updates connected.", true);
-          if (status === "CHANNEL_ERROR") showMessage("Live updates unavailable. Check Realtime is enabled.", true);
-        });
-    }
-
-    $("messageForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!activeUser) return;
-      const input = $("messageInput");
-      const content = input.value.trim();
-      if (!content) return;
-      $("sendBtn").disabled = true;
-      showMessage("");
-      const { error } = await db.from("messages").insert({
-        user_id: activeUser.id,
-        username: displayName(activeUser),
-        content
-      });
-      if (error) showMessage(error.message, true);
-      else input.value = "";
-      $("sendBtn").disabled = false;
-      input.focus();
-    });
-
-    // Supabase persists the session in localStorage and restores it on reload.
-    db.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        if (activeUser?.id !== session.user.id) {
-          setTimeout(() => showChat(session.user), 0);
-        }
-      } else if (event === "SIGNED_OUT") {
-        showAuth();
-      }
-    });
-
-    (async function start() {
-      const { data, error } = await db.auth.getSession();
-      if (error) showMessage(error.message);
-      if (data.session?.user) await showChat(data.session.user);
-      else showAuth();
-    })();
-  </script>
-</body>
-</html>
+<header class="topbar"><div class="top-inner">
+  <a class="brand" href="#home" aria-label="MIDADE mieh w mieh home" style="text-decoration:none;color:inherit"><div class="brand-mark">M</div><div><div class="brand-name">MIDADE mieh w mieh</div><div class="brand-sub">Together in faith & friendship</div></div></a>
+  <div class="top-actions"><button id="signinTop" class="signin" type="button">Sign in</button><button id="profileBtn" class="profile-btn hidden" type="button" aria-label="Profile">U</button><button id="menuBtn" class="menu-btn" type="button" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
+</div></header>
+<div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="drawer" class="drawer" aria-label="Site navigation"><div class="drawer-head"><strong>Explore MIDADE</strong><button id="closeDrawer" class="close-btn" aria-label="Close menu">×</button></div><nav class="nav-list">
+<button class="nav-link active" data-target="home"><span class="nav-icon">⌂</span>Home</button><button class="nav-link" data-target="leader"><span class="nav-icon">✦</span>Our leader</button><button class="nav-link" data-target="memories"><span class="nav-icon">▧</span>Our memories</button><button class="nav-link" data-target="groups"><span class="nav-icon">♧</span>Our groups</button><button class="nav-link" data-target="meetings"><span class="nav-icon">▦</span>Our meetings</button><button class="nav-link" data-target="contact"><span class="nav-icon">✉</span>Contact us</button>
+<div id="leaderNav" class="hidden"><div class="nav-divider"></div><div class="leader-label">Leaders area</div><button class="nav-link" data-target="meetingIdeas"><span class="nav-icon">✎</span>Meetings ideas</button><button class="nav-link" data-target="topicsMade"><span class="nav-icon">✓</span>Topics already made</button><button class="nav-link" data-target="upcomingEvents"><span class="nav-icon">☆</span>Upcoming events & details</button></div>
+</nav></aside>
+<div id="profileMenu" class="profile-menu hidden"><div id="profileEmail" class="profile-email"></div><button id="profileSignOut" type="button">Sign out</button></div>
+<main class="main" id="home">
+<section class="hero"><div class="hero-content"><div class="eyebrow">Mouvement International d'Apostolat Des Enfants</div><h1>Growing together.<br>Sharing our light.</h1><p>Welcome to MIDADE mieh w mieh — a community built around faith, friendship, service and meaningful moments. Discover our people, our groups, the activities we share and the events that bring us together.</p><div class="hero-cta"><button class="btn-light" data-scroll="memories">Explore our memories</button><button class="btn-outline" data-scroll="contact">Get in touch</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-circle art-one">✦</div><div class="art-circle art-two">♡</div><div class="art-circle art-three">☀</div></div></section>
+<section class="section" id="about"><div class="section-head"><div><div class="kicker">Who we are</div><h2>A community with a purpose</h2><p class="section-intro">MIDADE brings children and young people together to discover their faith, build friendships, take part in their communities and learn how small actions can make a meaningful difference.</p></div></div><div class="grid"><article class="info-card"><div class="card-icon lav">♡</div><h3>Faith & values</h3><p>We create spaces to reflect, learn and put Christian values into practice through everyday choices.</p></article><article class="info-card"><div class="card-icon peach">☀</div><h3>Friendship & belonging</h3><p>We meet, play, listen and grow together, making every member feel welcomed and included.</p></article><article class="info-card"><div class="card-icon mint">✦</div><h3>Action & service</h3><p>We encourage young people to care for others and bring positive change to the world around them.</p></article></div></section>
+<section class="section" id="leader"><div class="section-head"><div><div class="kicker">The people who guide us</div><h2>Our leader</h2><p class="section-intro">Meet the people who help guide our journey, support our teams and bring our MIDADE community together.</p></div></div><div class="leader-card"><div class="leader-avatar">✧</div><div><h3>Our MIDADE leadership</h3><p>This space is dedicated to introducing our leader and the team. Add the leader's name, a short biography, a photo and a few words about their role in the movement.</p><div class="placeholder-note">Website setup: replace this text and the ✧ placeholder with your leader's information and photo.</div></div></div></section>
+<section class="section" id="memories"><div class="section-head"><div><div class="kicker">Moments worth keeping</div><h2>Our memories</h2><p class="section-intro">Every meeting, camp, celebration and shared activity becomes part of our story. This gallery is where we can look back at the moments that made us smile and grow.</p></div></div><div class="memory-grid"><div class="memory-tile"><strong>Our gatherings</strong></div><div class="memory-tile"><strong>Special celebrations</strong></div><div class="memory-tile"><strong>Games & activities</strong></div><div class="memory-tile"><strong>Retreats & camps</strong></div><div class="memory-tile"><strong>Serving together</strong></div><div class="memory-tile"><strong>Friends & moments</strong></div></div><div class="placeholder-note">Gallery setup: replace these colourful tiles with your real photos. You can upload images to a public Supabase Storage bucket and add their public image URLs in this file.</div></section>
+<section class="section" id="groups"><div class="section-head"><div><div class="kicker">Different ages, one community</div><h2>Our groups</h2><p class="section-intro">Our groups give every age a place to belong. Through age-appropriate discussions, games, prayer and activities, members learn and grow side by side.</p></div></div><div class="grid"><article class="group-card"><div class="age">Young members</div><h3>Discover & play</h3><p>A welcoming space for younger children to discover stories, friendship, kindness and faith through creative activities.</p></article><article class="group-card"><div class="age">Growing together</div><h3>Learn & connect</h3><p>Activities and conversations that help members build confidence, understand their values and support one another.</p></article><article class="group-card"><div class="age">Youth</div><h3>Reflect & take action</h3><p>A place for deeper conversations, leadership, service projects and putting beliefs into action.</p></article></div><div class="placeholder-note">Group setup: change these descriptions to your official group names and age ranges.</div></section>
+<section class="section" id="meetings"><div class="section-head"><div><div class="kicker">Where we come together</div><h2>Our meetings</h2><p class="section-intro">Our meetings are moments to connect, explore a topic, share ideas and take part in activities. Each gathering is an opportunity to learn something and strengthen our community.</p></div></div><div class="meeting-row"><div class="date-box">01</div><div><h3>Faith, friendship & discussion</h3><p>Meetings can include a short reflection, an engaging group discussion, interactive games and a practical challenge to take into everyday life.</p></div></div><div class="meeting-row"><div class="date-box">02</div><div><h3>Activities & community projects</h3><p>From creative workshops to service activities, we learn by doing and discover how to work together.</p></div></div><div class="meeting-row"><div class="date-box">03</div><div><h3>Special gatherings</h3><p>Seasonal celebrations, camps and movement-wide events give us more chances to meet and create memories.</p></div></div><div class="placeholder-note">Meeting details: add your actual meeting schedule, location, registration information and any announcements here.</div></section>
+<section class="section" id="contact"><div class="contact-panel"><div><div class="eyebrow">Stay connected</div><h2 style="margin:8px 0 0">Contact us</h2><p>Have a question, want to learn more about MIDADE mieh w mieh, or need information about our meetings? Reach out to the team and we'll be happy to help.</p></div><a class="contact-link" id="contactEmailLink" href="mailto:ADD_YOUR_EMAIL_HERE">Email our team ↗</a></div><div class="placeholder-note">Contact setup: in the HTML, replace <b>ADD_YOUR_EMAIL_HERE</b> with your official contact email. You can also add Instagram or WhatsApp links.</div></section>
+<div id="leadersOnlyContent" class="leader-section hidden">
+<section id="meetingIdeas" class="section" style="padding-top:0"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Meetings ideas</h2><p class="section-intro">A private planning space for leaders to collect activities, games, discussion formats and meeting plans.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Icebreakers & team games</h3><p>Keep a collection of short activities that help members feel comfortable and participate.</p></article><article class="leader-tool"><h3>Discussion formats</h3><p>Save ways to start conversations, ask thoughtful questions and include every voice.</p></article><article class="leader-tool"><h3>Meeting structure</h3><p>Plan opening moments, the main topic, activities, reflection and closing.</p></article></div></section>
+<section id="topicsMade" class="section"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Topics already made</h2><p class="section-intro">Keep track of topics that have already been covered so leaders can revisit resources and avoid repeating the same session unintentionally.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Topic library</h3><p>Add the topic title, target age group, date, key message and any resources used.</p></article><article class="leader-tool"><h3>Session notes</h3><p>Record what worked well, what could be improved and ideas for a future session.</p></article><article class="leader-tool"><h3>Resources</h3><p>Keep links to presentations, printable activities, games and discussion questions.</p></article></div></section>
+<section id="upcomingEvents" class="section"><div class="section-head"><div><span class="leader-tag">Leaders only</span><h2>Upcoming events & details</h2><p class="section-intro">A private overview for leaders to organise upcoming events, responsibilities, schedules and important information.</p></div></div><div class="leader-tools"><article class="leader-tool"><h3>Event overview</h3><p>Add the event name, date, time, location and a short description.</p></article><article class="leader-tool"><h3>Team responsibilities</h3><p>List who is coordinating each task, activity, material or communication.</p></article><article class="leader-tool"><h3>Important details</h3><p>Keep practical notes, preparation deadlines, reminders and approved announcements.</p></article></div></section>
+<div class="placeholder-note">These leader sections are currently informational layouts. Their content is not yet saved to Supabase or editable from the website. The leader visibility is controlled by the profiles table described in the setup instructions.</div>
+</div>
+</main>
+<footer class="footer"><div class="footer-inner"><span>© <span id="year"></span> MIDADE mieh w mieh</span><span>Faith • Friendship • Action • Community</span></div></footer>
+<div id="authBackdrop" class="modal-backdrop hidden"><section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><button id="modalClose" class="modal-close" aria-label="Close">×</button><div class="kicker">Welcome to our community</div><h2 id="authTitle">Sign in</h2><p class="muted">Sign in to your MIDADE account.</p><div class="auth-tabs"><button id="loginTab" class="active" type="button">Sign in</button><button id="signupTab" type="button">Create account</button></div><form id="authForm"><label id="nameField" class="field hidden"><span>Your name</span><input id="displayName" maxlength="40" autocomplete="name" placeholder="Your name"></label><label class="field"><span>Email</span><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label class="field"><span>Password</span><input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="At least 6 characters"></label><button id="submitAuth" class="auth-submit" type="submit">Sign in</button></form><button id="googleBtn" class="google-btn" type="button">Continue with Google</button><div id="authMessage" class="auth-msg" role="status"></div></section></div>
+<script>
+// Frontend-safe Supabase project URL and anon/public key. Never put secret/service_role keys here.
+const SUPABASE_URL = "https://ogopytqswaeljinyvvei.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJvZ29weXRxc3dhZWxqaW55dnZlaSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkyMTU2MTc5LCJleHAiOjIxMDc3MzIxNzl9.Q8Fi-YMywUIGnIyZHf5VAdI49BtZ5pSx-5OYdB8R0wQ";
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);let authMode='login',currentUser=null,currentRole='member';
+function openDrawer(){ $('drawer').classList.add('open');$('drawerBackdrop').classList.add('open'); }
+function closeDrawer(){ $('drawer').classList.remove('open');$('drawerBackdrop').classList.remove('open'); }
+$('menuBtn').addEventListener('click',openDrawer);$('closeDrawer').addEventListener('click',closeDrawer);$('drawerBackdrop').addEventListener('click',closeDrawer);
+document.querySelectorAll('.nav-link').forEach(b=>b.addEventListener('click',()=>{const target=$(b.dataset.target);if(target){target.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-link').forEach(x=>x.classList.toggle('active',x===b));}closeDrawer();}));
+document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'})));
+function showAuth(){ $('authBackdrop').classList.remove('hidden');$('authMessage').textContent=''; }
+function hideAuth(){ $('authBackdrop').classList.add('hidden'); }
+$('signinTop').addEventListener('click',showAuth);$('modalClose').addEventListener('click',hideAuth);$('authBackdrop').addEventListener('click',e=>{if(e.target===$('authBackdrop'))hideAuth();});
+function setMode(mode){authMode=mode;$('loginTab').classList.toggle('active',mode==='login');$('signupTab').classList.toggle('active',mode==='signup');$('nameField').classList.toggle('hidden',mode!=='signup');$('authTitle').textContent=mode==='login'?'Sign in':'Create your account';$('submitAuth').textContent=mode==='login'?'Sign in':'Create account';$('password').autocomplete=mode==='login'?'current-password':'new-password';$('authMessage').textContent='';}
+$('loginTab').addEventListener('click',()=>setMode('login'));$('signupTab').addEventListener('click',()=>setMode('signup'));
+function nameOf(user){return user.user_metadata?.display_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'Member';}
+async function refreshRole(user){currentRole='member';if(!user)return;const {data,error}=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();if(!error&&data?.role==='leader')currentRole='leader';$('leaderNav').classList.toggle('hidden',currentRole!=='leader');$('leadersOnlyContent').classList.toggle('hidden',currentRole!=='leader');}
+function updateHeader(user){currentUser=user;$('signinTop').classList.toggle('hidden',!!user);$('profileBtn').classList.toggle('hidden',!user);if(user){$('profileBtn').textContent=(nameOf(user).trim()[0]||'U').toUpperCase();$('profileEmail').textContent=user.email||nameOf(user);}else{$('profileMenu').classList.add('hidden');$('leaderNav').classList.add('hidden');$('leadersOnlyContent').classList.add('hidden');currentRole='member';}}
+$('profileBtn').addEventListener('click',()=>$('profileMenu').classList.toggle('hidden'));document.addEventListener('click',e=>{if(!e.target.closest('#profileBtn')&&!e.target.closest('#profileMenu'))$('profileMenu').classList.add('hidden');});
+$('profileSignOut').addEventListener('click',async()=>{const {error}=await db.auth.signOut();if(error)alert(error.message);$('profileMenu').classList.add('hidden');});
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();const button=$('submitAuth');button.disabled=true;$('authMessage').textContent=authMode==='login'?'Signing in…':'Creating account…';try{let result;if(authMode==='signup'){const displayName=$('displayName').value.trim();if(!displayName)throw new Error('Please enter your name.');result=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{data:{display_name:displayName},emailRedirectTo:location.origin}});if(result.error)throw result.error;if(result.data.session){hideAuth();await handleUser(result.data.user);}else{$('authMessage').textContent='Account created. Check your email to confirm, then sign in.';}}else{result=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(result.error)throw result.error;hideAuth();await handleUser(result.data.user);}}catch(err){$('authMessage').textContent=err.message||'Unable to sign in.';}finally{button.disabled=false;}});
+$('googleBtn').addEventListener('click',async()=>{ $('authMessage').textContent='Redirecting to Google…';const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});if(error)$('authMessage').textContent=error.message;});
+async function handleUser(user){updateHeader(user);await refreshRole(user);}
+db.auth.onAuthStateChange((event,session)=>{setTimeout(()=>{if(session?.user)handleUser(session.user);else updateHeader(null);},0);});
+(async()=>{ $('year').textContent=new Date().getFullYear();const {data}=await db.auth.getSession();if(data.session?.user)await handleUser(data.session.user);else updateHeader(null);})();
+</script>
+</body></html>
